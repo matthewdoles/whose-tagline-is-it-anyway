@@ -1,7 +1,13 @@
 const Alexa = require('ask-sdk');
+const {   
+	getRandomMovie,
+  getMovieTagline,
+  getMovieKeywords,
+  getMovieCredits,
+	searchForMovie,
+} = require('./functions/movies');
 let voice_name = "Matthew";
 const productId = process.env.GOOD_WORD_HUNTING_PRODUCT_ID;
-const MovieFunctions = require('./moviefunctions');
 
 const LaunchRequestHandler = {
 	canHandle(handlerInput) {
@@ -94,7 +100,7 @@ const StartGameIntent = {
 		// get a random popular movie if this intent is not being repeated
 		if (attributes.movie_id == undefined) {
 			try {
-				let random_movie = await MovieFunctions.getRandomMovie();
+				let random_movie = await getRandomMovie();
 				if (random_movie.results.length > 0) {
 					// save variables for random movie
 					let random_index = Math.floor(Math.random() * random_movie.results.length);
@@ -114,7 +120,7 @@ const StartGameIntent = {
 		// if game is whose tagline, make api call for tagline
 		if (attributes.type == 'whoseTagline') {
 			try {
-				let random_movie_tagline = await MovieFunctions.getMovieTagline(movie_id);
+				let random_movie_tagline = await getMovieTagline(movie_id);
 				let tagline = random_movie_tagline.tagline;
 				//if tagline is not blank, continue with game
 				if (tagline) {
@@ -150,7 +156,7 @@ const StartGameIntent = {
 				speechText += "Okay, you will have 20 seconds for bidding on names. Let's begin. ";
 			}
 			try {
-				let random_movie_keywords = await MovieFunctions.getMovieKeywords(movie_id);
+				let random_movie_keywords = await getMovieKeywords(movie_id);
 				let keywords = [];
 				if (random_movie_keywords.keywords.length != 0) {
 					// if less than 5 words available to describe movie, list them all
@@ -183,7 +189,7 @@ const StartGameIntent = {
 					}
 					// after getting and listing off keywords, determine number of cast members for movie
 					try {
-						let random_movie_credits = await MovieFunctions.getMovieCredits(movie_id);
+						let random_movie_credits = await getMovieCredits(movie_id);
 						speechText += "<break time='1s'/> ";
 						let cast = [];
 						if (random_movie_credits.cast.length != 0) {
@@ -285,7 +291,7 @@ const HintIntent = {
 			// second hint, movie top two billed cast members, make api call
 			else if (attributes.hint == 2) {
 				try {
-					let movie_credits = await MovieFunctions.getMovieCredits(attributes.movie_id);
+					let movie_credits = await getMovieCredits(attributes.movie_id);
 					let credit_one = movie_credits.cast[0].name;
 					let credit_two = movie_credits.cast[1].name;
 					speechText = "<voice name='" + voice_name + "'>The top two billed people for this movie are <break time='1s'/>'" + credit_one + "' and '" + credit_two + "' <break time='1s'/>. With that, I'll give you a few more seconds to think about it. <break time='4s'/>" +
@@ -617,12 +623,12 @@ const GetTaglineIntent = {
 		let speechText = "";
 		// search for movie based on user input
 		try {
-			let search_movie = await MovieFunctions.searchForMovie(movie, year);
+			let search_movie = await searchForMovie(movie, year);
 			// if a result is found, get tagline for top (closest matched) result
 			if (search_movie.results.length > 0) {
 				let movie_id = search_movie.results[0].id;
 				try {
-					let search_movie_tagline = await MovieFunctions.getMovieTagline(movie_id);
+					let search_movie_tagline = await getMovieTagline(movie_id);
 					let tagline = search_movie_tagline.tagline;
 					let original_title = search_movie_tagline.original_title;
 					let year = search_movie_tagline.release_date;
@@ -660,14 +666,14 @@ const GetMovieCastIntent = {
 		let speechText = "";
 		// search for movie based on user input
 		try {
-			let search_movie = await MovieFunctions.searchForMovie(movie, year);
+			let search_movie = await searchForMovie(movie, year);
 			// if a result is found, get credits for top (closest matched) result
 			if (search_movie.results.length > 0) {
 				let movie_id = search_movie.results[0].id;
 				let movie = search_movie.results[0].title;
 				let year = search_movie.results[0].release_date;
 				try {
-					let search_movie_credits = await MovieFunctions.getMovieCredits(movie_id);
+					let search_movie_credits = await getMovieCredits(movie_id);
 					if (search_movie_credits.cast.length != 0) {
 						// if movie has more than 10 credits, only name the top 10 from highest billed to lowest
 						if (search_movie_credits.cast.length < 10) {
