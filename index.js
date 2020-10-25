@@ -19,6 +19,12 @@ const { BuyResponseIntent } = require('./intents/buy-response');
 const { CancelIntent } = require('./intents/cancel');
 const { Fallback } = require('./intents/fallback');
 const { GoodWordHuntingIntent } = require('./intents/good-word-hunting');
+const { HelpIntent } = require('./intents/help/help');
+const { HelpGetCastIntent } = require('./intents/help/help-get-cast');
+const { HelpGetTaglineIntent } = require('./intents/help/help-get-tagline');
+const { HelpGWHIntent } = require('./intents/help/help-gwh');
+const { HelpGWHGroupIntent } = require('./intents/help/help-gwh-group');
+const { HelpWhoseTaglineIntent } = require('./intents/help/help-whose-tagline');
 const { HintIntent } = require('./intents/hint');
 const { NoIntent } = require('./intents/no');
 const { PurchasedIntent } = require('./intents/purchased');
@@ -817,183 +823,7 @@ const GetMovieCastIntent = {
       .getResponse();
   },
 };
-const HelpIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('HelpIntent Handler Called');
-    // list help options available
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>For help and information about Whose Tagline Is It Anyway, please say 'help with Whose Tagline Is It Anyway'. " +
-      "For help and information about Good Word Hunting, please say 'help with Good Word Hunting'. " +
-      "For help and information about getting the tagline for a specific movie, please say 'help with getting movie tagline'. " +
-      "And for help and information about getting the cast for a specific movie, please say 'help with getting movie cast'. </voice>";
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>What area can I help you with?</voice>"
-      )
-      .getResponse();
-  },
-};
-const HelpWhoseTaglineIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'HelpWhoseTaglineIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('HelpWhoseTaglineIntent Handler Called');
-    // help option explaining how to play Whose Tagline Is It Anyway
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>In Whose Tagline Is It Anyway, you will be given the tagline for a random movie. With that tagline, " +
-      'you must do your best to deduce what movie the tagline is associated with. If you are having trouble, you can get up to two hints. The first hint will ' +
-      'be the year the movie came out. The second hint will be the top two billed cast members of the movie. After that, you must give your answer. ' +
-      'Results then will be compared, and the answer given. And that is how you play Whose Tagline Is It Anyway. Shall we play a quick round?</voice>';
-    handlerInput.attributesManager.setSessionAttributes({
-      type: 'whoseTagline',
-    });
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to play a quick round?</voice>"
-      )
-      .getResponse();
-  },
-};
-const HelpGoodWordHuntingIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'HelpGoodWordHuntingIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('HelpGoodWordHuntingIntent Handler Called');
-    // help option explaining how to play Good Word Hunting
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>Good Word Hunting is an additional game available for purchase. At the start of the game, " +
-      'you will be given up to 5 keywords associated with a random movie. With those keywords, you will then be asked how many cast members from ' +
-      'lowest billed to highest, would you need to guess what the movie is. With a number given, I will then list off the corresponding number of ' +
-      'names, again from lowest billed to highest. However, If you believe you know what the movie is based on just the keywords, you are also ' +
-      'welcome to say zero names. After that, you will be prompted to answer. With an answer given, results will be compared and the correct answer ' +
-      "given. To learn about playing Good Word Hunting in a group setting, say 'how to play Good Word Hunting in a group setting'. If you are interested in buying Good Word Hunting, please say 'buy Good Word Hunting'.</voice>";
 
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>If you need help, please say 'help'.</voice>"
-      )
-      .getResponse();
-  },
-};
-const HelpGoodWordHuntingGroupIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'HelpGoodWordHuntingGroupIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('HelpGoodWordHuntingGroupIntent Handler Called');
-    // help option explaining how to play Good Word Hunting in a group setting
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>Good Word Hunting can also be fun to play in a group setting.  At the start of the game, everyone " +
-      'will be given the keywords associated with a random movie. Then, you will be given 20 seconds to bid on who can name the movie with the least amount ' +
-      'of names given to them, from lowest billed to highest. With a successful bidder determined, that person will complete the game. If the bidder gets the ' +
-      'answer right, add a point. If they get it wrong, deduct a point. Or, instead of subtracting a point, the next bidder gains a point. For example, if ' +
-      "someone bids 3 names, and the next bidder doesn't think they can do it with 2. They can then challenge the 3 name bidder to answer, and if they don't " +
-      'get it right the person that challenged gets a point. You may bend the rules however you like, the only suggestion I have it to establish a bidding order ' +
-      'as to avoid chaos. On top of that, please say yes when prompted if you would like to play with extended time. You will be given 20 seconds to bid on names. ' +
-      "To hear this information again, please say 'how to play Good Word Hunting in a group setting'. If you are interested in buying Good Word Hunting, please say 'buy Good Word Hunting'.</voice>";
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>If you need help, please say 'help'.</voice>"
-      )
-      .getResponse();
-  },
-};
-const HelpGetTaglineIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'HelpGetTaglineIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('HelpGetTaglineIntent Handler Called');
-    // help option explaining how to use the ability to get a tagline for any movie
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>You can use this skill to get the tagline of any movie. Simply say 'get tagline for insert movie'. " +
-      "Or, you can say 'what is the tagline for insert movie'. If you are having trouble getting the tagline for the right  movie, try appending the year " +
-      "the movie came out after the movie title. So, you would say 'what is the tagline for insert movie from insert year movie came out'. " +
-      'This skill can not be used during a game. If it is, your current round progress will be lost. If you would like to hear this information again, ' +
-      "please say 'help with getting movie tagline'</voice>";
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>If you need help, please say 'help'.</voice>"
-      )
-      .getResponse();
-  },
-};
-const HelpGetCastIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'HelpGetCastIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('HelpGetCastIntent Handler Called');
-    // help option explaining how to use the ability to get the cast for any movie
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>You can use this skill to get the cast list of any movie. Simply say 'who was in insert movie'. " +
-      "Or, you can say 'get cast for insert movie. If you are having trouble getting the cast list for the right movie, try appending the year the movie " +
-      "came out after the movie title. So, you would say 'who was in insert movie from insert year movie came out'. This skill can not be used during a " +
-      "game. If it is, your current round progress will be lost. If you would like to hear this information again, please say 'help with getting movie cast'</voice>";
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>If you need help, please say 'help'.</voice>"
-      )
-      .getResponse();
-  },
-};
 const YesIntent = {
   canHandle(handlerInput) {
     return (
@@ -1173,8 +1003,8 @@ exports.handler = skillBuilder
     GetMovieCastIntent,
     HelpIntent,
     HelpWhoseTaglineIntent,
-    HelpGoodWordHuntingIntent,
-    HelpGoodWordHuntingGroupIntent,
+    HelpGWHIntent,
+    HelpGWHGroupIntent,
     HelpGetTaglineIntent,
     HelpGetCastIntent,
     StopIntent,
