@@ -1,4 +1,5 @@
 import { VOICE_NAME } from '../consts';
+import { getMovieCredits } from '../functions/movies';
 
 export const HintIntent = {
   canHandle(handlerInput) {
