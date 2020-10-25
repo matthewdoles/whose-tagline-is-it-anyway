@@ -13,74 +13,11 @@ const { LaunchRequestHandler } = require('./handlers/launch-request');
 const { RefundResponseHandler } = require('./handlers/refund-response');
 const { UnhandledHandler } = require('./handlers/unhandled');
 
-const WhoseTaglineIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'WhoseTaglineIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('WhoseTaglineIntent handler called');
-    // set game type to whose tagline, call start game intent
-    handlerInput.attributesManager.setSessionAttributes({
-      type: 'whoseTagline',
-    });
-    return StartGameIntent.handle(handlerInput);
-  },
-};
-const GoodWordHuntingIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'GoodWordHuntingIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('GoodWordHuntingIntent handler called');
-    // ensure user is eligible to play good word hunting
-    const locale = handlerInput.requestEnvelope.request.locale;
-    const ms = handlerInput.serviceClientFactory.getMonetizationServiceClient();
-    return ms.getInSkillProduct(locale, PRODUCT_ID).then(function (result) {
-      if (result.entitled == 'ENTITLED') {
-        // set game type to good word hunting, call start game intent
-        let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to play Good Word Hunting with extended time?</voice>";
-        let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to play Good Word Hunting with extended time?</voice>";
-        handlerInput.attributesManager.setSessionAttributes({
-          type: 'goodWordHuntingStart',
-        });
-        return handlerInput.responseBuilder
-          .speak(speechText)
-          .reprompt(repromptText)
-          .getResponse();
-      } else {
-        // user not eligible to play, ask if they would like to hear game description
-        let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, it seems you haven't purchased the rights to play Good Word Hunting. Would you like to hear a little bit about this game?</voice>";
-        let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to hear a little bit about Good Word Hunting?</voice>";
-        handlerInput.attributesManager.setSessionAttributes({
-          type: 'goodWordHuntingHelp',
-        });
-        return handlerInput.responseBuilder
-          .speak(speechText)
-          .reprompt(repromptText)
-          .getResponse();
-      }
-    });
-  },
-};
+// intents
+const { WhoseTaglineIntent } = require('./intents/whose-tagline');
+const { GoodWordHuntingIntent } = require('./intents/good-word-hunting');
+const { HintIntent } = require('./intents/hint');
+
 const StartGameIntent = {
   canHandle(handlerInput) {
     return (
@@ -93,16 +30,16 @@ const StartGameIntent = {
     let attributes = handlerInput.attributesManager.getSessionAttributes();
     let speechText = '';
     let repromptText = '';
-    var movie_id = attributes.movie_id;
+    var movieId = attributes.movieId;
     var movie = attributes.movie;
     var year = attributes.year;
     var hint = attributes.hint;
     if (hint == undefined) {
       hint = 1;
     }
-    console.log(movie_id);
+    console.log(movieId);
     // get a random popular movie if this intent is not being repeated
-    if (attributes.movie_id == undefined) {
+    if (attributes.movieId == undefined) {
       try {
         let random_movie = await getRandomMovie();
         if (random_movie.results.length > 0) {
@@ -110,7 +47,7 @@ const StartGameIntent = {
           let random_index = Math.floor(
             Math.random() * random_movie.results.length
           );
-          movie_id = random_movie.results[random_index].id;
+          movieId = random_movie.results[random_index].id;
           movie = random_movie.results[random_index].title;
           year = random_movie.results[random_index].release_date;
         }
@@ -136,7 +73,7 @@ const StartGameIntent = {
     // if game is whose tagline, make api call for tagline
     if (attributes.type == 'whoseTagline') {
       try {
-        let random_movie_tagline = await getMovieTagline(movie_id);
+        let random_movie_tagline = await getMovieTagline(movieId);
         let tagline = random_movie_tagline.tagline;
         //if tagline is not blank, continue with game
         if (tagline) {
@@ -155,7 +92,7 @@ const StartGameIntent = {
             type: 'answer',
             tagline: tagline,
             hint: hint,
-            movie_id: movie_id,
+            movieId: movieId,
             movie: movie,
             year: year.substring(0, 4),
             repeat: 'whoseTagline',
@@ -186,7 +123,7 @@ const StartGameIntent = {
           "Okay, you will have 20 seconds for bidding on names. Let's begin. ";
       }
       try {
-        let random_movie_keywords = await getMovieKeywords(movie_id);
+        let random_movie_keywords = await getMovieKeywords(movieId);
         let keywords = [];
         if (random_movie_keywords.keywords.length != 0) {
           // if less than 5 words available to describe movie, list them all
@@ -233,7 +170,7 @@ const StartGameIntent = {
           }
           // after getting and listing off keywords, determine number of cast members for movie
           try {
-            let random_movie_credits = await getMovieCredits(movie_id);
+            let random_movie_credits = await getMovieCredits(movieId);
             speechText += "<break time='1s'/> ";
             let cast = [];
             if (random_movie_credits.cast.length != 0) {
@@ -269,7 +206,7 @@ const StartGameIntent = {
             // set session variables, elicit slot for number of names needed
             handlerInput.attributesManager.setSessionAttributes({
               cast: cast,
-              movie_id: movie_id,
+              movieId: movieId,
               movie: movie,
               year: year.substring(0, 4),
               keywords: keywords,
@@ -354,131 +291,6 @@ const StartGameIntent = {
     }
   },
 };
-const HintIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'HintIntent'
-    );
-  },
-  async handle(handlerInput) {
-    console.log('HintIntent handler called');
-    let attributes = handlerInput.attributesManager.getSessionAttributes();
-    let speechText = '';
-    // if game is whose tagline, allow for two hints
-    if (attributes.type == 'whoseTagline' || attributes.type == 'answer') {
-      // first hint, year the movie came out, release year passed along in sessions variables
-      if (attributes.hint == 1) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>This movie came out in " +
-          attributes.year +
-          ". Was that any help? I'll give you a few more seconds to think on it. <break time='4s'/>" +
-          'Okay, what would you like to do? Repeat the tagline, get one more hint, or answer.</voice>';
-      }
-      // second hint, movie top two billed cast members, make api call
-      else if (attributes.hint == 2) {
-        try {
-          let movie_credits = await getMovieCredits(attributes.movie_id);
-          let credit_one = movie_credits.cast[0].name;
-          let credit_two = movie_credits.cast[1].name;
-          speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>The top two billed people for this movie are <break time='1s'/>'" +
-            credit_one +
-            "' and '" +
-            credit_two +
-            "' <break time='1s'/>. With that, I'll give you a few more seconds to think about it. <break time='4s'/>" +
-            'Okay, that was the last hint I can give you, what would you like to do? Repeat the tagline or answer.</voice>';
-        } catch (error) {
-          speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, an error occurred getting data from The Movie Database for your hint. Would you like to answer?</voice>";
-          console.log(error);
-        }
-      }
-      // only two hints allowed, prompt for user to answer
-      else {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>I'm sorry, I'm afraid that is all the hints I can give. Would you like to repeat the tagline or answer?</voice>";
-      }
-      handlerInput.attributesManager.setSessionAttributes({
-        type: 'answer',
-        movie: attributes.movie,
-        movie_id: attributes.movie_id,
-        year: attributes.year,
-        tagline: attributes.tagline,
-        hint: attributes.hint + 1,
-        repeat: 'whoseTagline',
-      });
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .reprompt(
-          "<voice name='" + VOICE_NAME + "'>Would you like to answer?</voice>"
-        )
-        .getResponse();
-    }
-    // if game is good word hunting, secretly allow for no hints
-    if (attributes.type == 'goodWordHunting') {
-      speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, I can't give you any hints, but I'll give you a few more seconds to think of your answer. <break time='4s'/>" +
-        'Okay, what movie are these keywords and cast members associated with?</voice>';
-      let attributes = handlerInput.attributesManager.getSessionAttributes();
-      let easterEgg = 1;
-      easterEgg = easterEgg + attributes.easterEgg;
-      // if the user asks for a hint three times, give them the year of the movie
-      if (easterEgg == 3) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Okay I give in, this movie came out in " +
-          attributes.year +
-          ". I hope that helps, I'll give you a few more seconds to think of your answer. <break time='4s'/>" +
-          'Okay, what movie are these keywords and cast members associated with?</voice>';
-      }
-      // but no more hints after that!
-      if (easterEgg > 3) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>That is seriously all the hints I am going to give you. However, I'll still give you a few more seconds to think of your final answer. <break time='4s'/>" +
-          'Okay, what movie are these keywords and cast members associated with?</voice>';
-      }
-
-      handlerInput.attributesManager.setSessionAttributes({
-        cast: attributes.cast,
-        movie_id: attributes.movie_id,
-        movie: attributes.movie,
-        year: attributes.year,
-        keywords: attributes.keywords,
-        easterEgg: easterEgg,
-        type: 'goodWordHunting',
-        numberNamesNeeded: attributes.numberNamesNeeded,
-        repeat: 'goodWordHunting',
-        time: attributes.time,
-      });
-      return handlerInput.responseBuilder
-        .addDirective({
-          type: 'Dialog.ElicitSlot',
-          slotToElicit: 'guess',
-          updatedIntent: {
-            name: 'GameResultsIntent',
-            confirmationStatus: 'NONE',
-          },
-        })
-        .speak(speechText)
-        .reprompt("<voice name='" + VOICE_NAME + "'>What movie is it?</voice>")
-        .getResponse();
-    }
-  },
-};
 const MovieCastIntent = {
   canHandle(handlerInput) {
     return (
@@ -496,7 +308,7 @@ const MovieCastIntent = {
     if (isNaN(numberNamesNeeded) == true) {
       handlerInput.attributesManager.setSessionAttributes({
         cast: attributes.cast,
-        movie_id: attributes.movie_id,
+        movieId: attributes.movieId,
         movie: attributes.movie,
         year: attributes.year,
         keywords: attributes.keywords,
@@ -538,7 +350,7 @@ const MovieCastIntent = {
     ) {
       handlerInput.attributesManager.setSessionAttributes({
         cast: attributes.cast,
-        movie_id: attributes.movie_id,
+        movieId: attributes.movieId,
         movie: attributes.movie,
         year: attributes.year,
         keywords: attributes.keywords,
@@ -639,7 +451,7 @@ const MovieCastIntent = {
       // pass along appropriate variables, elicit answer or repeat
       handlerInput.attributesManager.setSessionAttributes({
         cast: attributes.cast,
-        movie_id: attributes.movie_id,
+        movieId: attributes.movieId,
         movie: attributes.movie,
         year: attributes.year,
         keywords: attributes.keywords,
@@ -830,9 +642,9 @@ const GetTaglineIntent = {
       let search_movie = await searchForMovie(movie, year);
       // if a result is found, get tagline for top (closest matched) result
       if (search_movie.results.length > 0) {
-        let movie_id = search_movie.results[0].id;
+        let movieId = search_movie.results[0].id;
         try {
-          let search_movie_tagline = await getMovieTagline(movie_id);
+          let search_movie_tagline = await getMovieTagline(movieId);
           let tagline = search_movie_tagline.tagline;
           let original_title = search_movie_tagline.original_title;
           let year = search_movie_tagline.release_date;
@@ -902,11 +714,11 @@ const GetMovieCastIntent = {
       let search_movie = await searchForMovie(movie, year);
       // if a result is found, get credits for top (closest matched) result
       if (search_movie.results.length > 0) {
-        let movie_id = search_movie.results[0].id;
+        let movieId = search_movie.results[0].id;
         let movie = search_movie.results[0].title;
         let year = search_movie.results[0].release_date;
         try {
-          let search_movie_credits = await getMovieCredits(movie_id);
+          let search_movie_credits = await getMovieCredits(movieId);
           if (search_movie_credits.cast.length != 0) {
             // if movie has more than 10 credits, only name the top 10 from highest billed to lowest
             if (search_movie_credits.cast.length < 10) {
@@ -1243,7 +1055,7 @@ const RepeatIntent = {
             type: 'whoseTagline',
             tagline: attributes.tagline,
             hint: attributes.hint,
-            movie_id: attributes.movie_id,
+            movieId: attributes.movieId,
             movie: attributes.movie,
             year: attributes.year,
           });
@@ -1282,7 +1094,7 @@ const RepeatIntent = {
             "With that, I'll give you a few more seconds to think of your answer. <break time='4s'/> Alright, what movie are these keywords and cast members associated with?</voice>";
           handlerInput.attributesManager.setSessionAttributes({
             cast: attributes.cast,
-            movie_id: attributes.movie_id,
+            movieId: attributes.movieId,
             movie: attributes.movie,
             year: attributes.year,
             keywords: attributes.keywords,
