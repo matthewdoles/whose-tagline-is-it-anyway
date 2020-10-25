@@ -1,5 +1,5 @@
 const Alexa = require('ask-sdk');
-const { PRODUCT_ID, VOICE_NAME } = require('./consts');
+const { VOICE_NAME } = require('./consts');
 const {
   getRandomMovie,
   getMovieTagline,
@@ -16,11 +16,15 @@ const { UnhandledHandler } = require('./handlers/unhandled');
 // intents
 const { BuyIntent } = require('./intents/buy');
 const { BuyResponseIntent } = require('./intents/buy-response');
+const { CancelIntent } = require('./intents/cancel');
+const { Fallback } = require('./intents/fallback');
 const { GoodWordHuntingIntent } = require('./intents/good-word-hunting');
 const { HintIntent } = require('./intents/hint');
+const { NoIntent } = require('./intents/no');
 const { PurchasedIntent } = require('./intents/purchased');
 const { RefundIntent } = require('./intents/refund');
 const { ShopIntent } = require('./intents/shop');
+const { StopIntent } = require('./intents/stop');
 const { WhoseTaglineIntent } = require('./intents/whose-tagline');
 
 const StartGameIntent = {
@@ -1147,103 +1151,6 @@ const RepeatIntent = {
       .speak(speechText)
       .reprompt(
         "<voice name='" + VOICE_NAME + "'Would you like some help?</voice>"
-      )
-      .getResponse();
-  },
-};
-const CancelIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('CancelIntent Handler Called');
-    // cancel intent, exit skill
-    return handlerInput.responseBuilder.speak();
-  },
-};
-const StopIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('StopIntent Handler Called');
-    // stop intent, exit skill
-    return handlerInput.responseBuilder.speak();
-  },
-};
-const NoIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.NoIntent'
-    );
-  },
-  async handle(handlerInput) {
-    console.log('YesIntent Handler Called');
-    let attributes = handlerInput.attributesManager.getSessionAttributes();
-    let speechText = '';
-    if (attributes.type) {
-      switch (attributes.type) {
-        case 'whoseTagline':
-          speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Okay, if you would like more information about this skill's abilities, please say 'help'</voice>";
-          break;
-        case 'goodWordHuntingStart':
-          await handlerInput.attributesManager.setSessionAttributes({
-            type: 'goodWordHunting',
-            time: '4s',
-          });
-          return StartGameIntent.handle(handlerInput);
-        default:
-          speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, I am not sure what you are saying no for. Would you like some help?</voice>";
-          handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
-      }
-    } else {
-      speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, I am not sure what you are saying no for. Would you like some help?</voice>";
-      handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
-    }
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt(
-        "<voice name='" + VOICE_NAME + "'>Would you like some help?</voice>"
-      )
-      .getResponse();
-  },
-};
-const Fallback = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'AMAZON.FallbackIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('FallbackIntent Handler Called');
-    return handlerInput.responseBuilder
-      .speak(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I didn't understand what you said. Please try again.</voice>"
-      )
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I didn't understand what you said. Please try again.</voice>"
       )
       .getResponse();
   },
