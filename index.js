@@ -8,52 +8,11 @@ const {
   searchForMovie,
 } = require('./functions/movies');
 
-const LaunchRequestHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
-  },
-  handle(handlerInput) {
-    console.log('LaunchRequest handler called');
-    // determine response based on if user is eligible to play good word hunting
-    const locale = handlerInput.requestEnvelope.request.locale;
-    const ms = handlerInput.serviceClientFactory.getMonetizationServiceClient();
-    return ms.getInSkillProduct(locale, PRODUCT_ID).then(function (result) {
-      if (result.entitled == 'ENTITLED') {
-        // use yes intent in reprompt to fire help intent
-        let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Hello, which game would you like to play: Whose Tagline Is It Anyway, or Good Word Hunting</voice>";
-        let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I did not quite understand that. Would you like help?</voice>";
-        handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
-        return handlerInput.responseBuilder
-          .speak(speechText)
-          .reprompt(repromptText)
-          .getResponse();
-      } else {
-        // use yes intent to fire whose tagline intent (game)
-        let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Hello, welcome to Whose Tagline Is It Anyway. Would you like to play a quick round? Or, for more information, please say 'help'</voice>";
-        let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I did not quite understand that. If you would like more information, please say 'help'.</voice>";
-        handlerInput.attributesManager.setSessionAttributes({
-          type: 'whoseTagline',
-        });
-        return handlerInput.responseBuilder
-          .speak(speechText)
-          .reprompt(repromptText)
-          .getResponse();
-      }
-    });
-  },
-};
+// handlers
+const { LaunchRequestHandler } = require('./handlers/launch-request');
+const { RefundResponseHandler } = require('./handlers/refund-response');
+const { UnhandledHandler } = require('./handlers/unhandled');
+
 const WhoseTaglineIntent = {
   canHandle(handlerInput) {
     return (
@@ -1636,80 +1595,7 @@ const RefundIntent = {
       .getResponse();
   },
 };
-const RefundResponseHandler = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-      handlerInput.requestEnvelope.request.name === 'Cancel'
-    );
-  },
-  handle(handlerInput) {
-    console.log('CancelResponseIntent Handler Called');
-    const locale = handlerInput.requestEnvelope.request.locale;
-    const ms = handlerInput.serviceClientFactory.getMonetizationServiceClient();
-    const productId = handlerInput.requestEnvelope.request.payload.productId;
 
-    return ms
-      .getInSkillProducts(locale)
-      .then(function handleCancelResponse(result) {
-        const product = result.inSkillProducts.filter(
-          (record) => record.productId === productId
-        );
-        console.log(`PRODUCT = ${JSON.stringify(product)}`);
-        if (handlerInput.requestEnvelope.request.status.code === '200') {
-          if (
-            handlerInput.requestEnvelope.request.payload.purchaseResult ===
-            'ACCEPTED'
-          ) {
-            const speechText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>Your request to refund Good Word Hunting has been processed. Would you like to resume playing Whose Tagline Is It Anyway instead?</voice>";
-            const repromptText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>Would you like to play a game of Whose Tagline Is It Anyway?</voice>";
-            handlerInput.attributesManager.setSessionAttributes({
-              type: 'whoseTagline',
-            });
-            return handlerInput.responseBuilder
-              .speak(speechText)
-              .reprompt(repromptText)
-              .getResponse();
-          }
-          if (
-            handlerInput.requestEnvelope.request.payload.purchaseResult ===
-            'NOT_ENTITLED'
-          ) {
-            const speechText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>Sorry, you don't seem to have any purchases available for a refund. This skill has one game available for purchase called Good Word Hunting. Would you like to hear about it?</voice>";
-            const repromptText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>Would you like to hear about Good Word Hunting?</voice>";
-            handlerInput.attributesManager.setSessionAttributes({
-              type: 'goodWordHuntingHelp',
-            });
-            return handlerInput.responseBuilder
-              .speak(speechText)
-              .reprompt(repromptText)
-              .getResponse();
-          }
-        }
-        console.log(
-          'Connections.Response indicated failure. error: ${handlerInput.requestEnvelope.request.status.message}'
-        );
-
-        return handlerInput.responseBuilder
-          .speak(
-            'There was an error handling your purchase request. Please try again or contact us for help.'
-          )
-          .getResponse();
-      });
-  },
-};
 const PurchasedIntent = {
   canHandle(handlerInput) {
     return (
@@ -1752,18 +1638,6 @@ const PurchasedIntent = {
         return handlerInput.responseBuilder.speak(speechText);
       }
     });
-  },
-};
-const UnhandledHandler = {
-  canHandle() {
-    return true;
-  },
-  handle(handlerInput, error) {
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>Sorry, I am not quite sure what to do.</voice>";
-    return handlerInput.responseBuilder.speak(speechText).getResponse();
   },
 };
 
