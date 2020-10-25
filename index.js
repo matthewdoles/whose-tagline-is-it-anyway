@@ -14,10 +14,12 @@ const { RefundResponseHandler } = require('./handlers/refund-response');
 const { UnhandledHandler } = require('./handlers/unhandled');
 
 // intents
+const { AnswerIntent } = require('./intents/answer');
 const { BuyIntent } = require('./intents/buy');
 const { BuyResponseIntent } = require('./intents/buy-response');
 const { CancelIntent } = require('./intents/cancel');
 const { Fallback } = require('./intents/fallback');
+const { GameResultsIntent } = require('./intents/game-results');
 const { GetMovieCastIntent } = require('./intents/get-movie-cast');
 const { GetTaglineIntent } = require('./intents/get-tagline');
 const { GoodWordHuntingIntent } = require('./intents/good-word-hunting');
@@ -28,6 +30,7 @@ const { HelpGWHIntent } = require('./intents/help/help-gwh');
 const { HelpGWHGroupIntent } = require('./intents/help/help-gwh-group');
 const { HelpWhoseTaglineIntent } = require('./intents/help/help-whose-tagline');
 const { HintIntent } = require('./intents/hint');
+const { MovieCastIntent } = require('./intents/movie-cast');
 const { NoIntent } = require('./intents/no');
 const { PurchasedIntent } = require('./intents/purchased');
 const { RefundIntent } = require('./intents/refund');
@@ -308,341 +311,6 @@ const StartGameIntent = {
     }
   },
 };
-const MovieCastIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'MovieCastIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('MovieCastIntent handler called');
-    let numberNamesNeeded =
-      handlerInput.requestEnvelope.request.intent.slots.numberNamesNeeded.value;
-    let attributes = handlerInput.attributesManager.getSessionAttributes();
-    let speechText = '';
-    // if slot is not a number, tell user to give a number
-    if (isNaN(numberNamesNeeded) == true) {
-      handlerInput.attributesManager.setSessionAttributes({
-        cast: attributes.cast,
-        movieId: attributes.movieId,
-        movie: attributes.movie,
-        year: attributes.year,
-        keywords: attributes.keywords,
-        time: attributes.time,
-      });
-      return handlerInput.responseBuilder
-        .addDirective({
-          type: 'Dialog.ElicitSlot',
-          slotToElicit: 'numberNamesNeeded',
-          updatedIntent: {
-            name: 'MovieCastIntent',
-            confirmationStatus: 'NONE',
-            slots: {
-              numberNamesNeeded: {
-                name: 'numberNamesNeeded',
-                value: 'string',
-                resolutions: {},
-                confirmationStatus: 'NONE',
-              },
-            },
-          },
-        })
-        .speak(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>I'm sorry, I'm having trouble understanding your response. From lowest billed to highest, how many names do you think you need to name this film?</voice>"
-        )
-        .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>From lowest billed to highest, how many names do you think you need to name this film?</voice>"
-        )
-        .getResponse();
-    }
-    // if slot number is larger than cast size or smaller than zero, tell user to give a correct number
-    else if (
-      numberNamesNeeded > attributes.cast.length ||
-      numberNamesNeeded < 0
-    ) {
-      handlerInput.attributesManager.setSessionAttributes({
-        cast: attributes.cast,
-        movieId: attributes.movieId,
-        movie: attributes.movie,
-        year: attributes.year,
-        keywords: attributes.keywords,
-        time: attributes.time,
-      });
-      return handlerInput.responseBuilder
-        .addDirective({
-          type: 'Dialog.ElicitSlot',
-          slotToElicit: 'numberNamesNeeded',
-          updatedIntent: {
-            name: 'MovieCastIntent',
-            confirmationStatus: 'NONE',
-            slots: {
-              numberNamesNeeded: {
-                name: 'numberNamesNeeded',
-                value: 'string',
-                resolutions: {},
-                confirmationStatus: 'NONE',
-              },
-            },
-          },
-        })
-        .speak(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>I'm sorry, the number must be between 0 and " +
-            attributes.cast.length +
-            '. from lowest billed to highest, how many names do you think you need to name this film?</voice>'
-        )
-        .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>From lowest billed to highest, how many names do you think you need to name this film?</voice>"
-        )
-        .getResponse();
-    } else {
-      // speech text if user needs zero names
-      if (numberNamesNeeded == 0) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>You believe you can name this movie with no cast names give. What is the name of this movie?</voice>";
-      }
-      // speech text if user needs only one name
-      else if (numberNamesNeeded == 1) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>You said you need only one name in order to name this movie. That lowest billed name is " +
-          attributes.cast[attributes.cast.length - 1] +
-          "<break time='1s'/>. " +
-          "I'll give you a few more seconds to think of your answer. <break time='4s'/> Okay, what is the name of this movie?</voice>";
-      }
-      // speech text if user needs all names
-      else if (numberNamesNeeded == attributes.cast.length) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>You said you need all " +
-          numberNamesNeeded +
-          " names in order to name this movie. Those names from lowest to highest billed are <break time='1s'/>";
-        let castIndex = attributes.cast.length - 1;
-        for (let i = 1; i <= attributes.cast.length; i++) {
-          if (i == numberNamesNeeded) {
-            speechText +=
-              'and ' + attributes.cast[castIndex] + ". <break time='1s'/>";
-          } else {
-            speechText += attributes.cast[castIndex] + ", <break time='1s'/>";
-          }
-          castIndex--;
-        }
-        speechText +=
-          "With that, I'll give you a few more seconds to think about it. <break time='4s'/> Alright, what movie are these keywords and cast members associated with?</voice>";
-      }
-      // speech text if user needs in between two and cast length minus one names
-      else {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>You said you need " +
-          numberNamesNeeded +
-          ' out of ' +
-          attributes.cast.length +
-          " names in order to name this movie. Those names from lowest to highest billed are <break time='1s'/>";
-        let castIndex = attributes.cast.length - 1;
-        for (let i = 1; i <= numberNamesNeeded; i++) {
-          if (i == numberNamesNeeded) {
-            speechText +=
-              'and ' + attributes.cast[castIndex] + ". <break time='1s'/>";
-          } else {
-            speechText += attributes.cast[castIndex] + ", <break time='1s'/>";
-          }
-          castIndex--;
-        }
-        speechText +=
-          "With that, I'll give you a few more seconds to think of your answer. <break time='4s'/> Alright, what movie are these keywords and cast members associated with? If you would like to hear the keywords and cast members again say repeat.</voice>";
-      }
-      // pass along appropriate variables, elicit answer or repeat
-      handlerInput.attributesManager.setSessionAttributes({
-        cast: attributes.cast,
-        movieId: attributes.movieId,
-        movie: attributes.movie,
-        year: attributes.year,
-        keywords: attributes.keywords,
-        type: 'goodWordHunting',
-        numberNamesNeeded: numberNamesNeeded,
-        repeat: 'goodWordHunting',
-        time: attributes.time,
-      });
-      return handlerInput.responseBuilder
-        .addDirective({
-          type: 'Dialog.ElicitSlot',
-          slotToElicit: 'guess',
-          updatedIntent: {
-            name: 'GameResultsIntent',
-            confirmationStatus: 'NONE',
-            slots: {
-              guess: {
-                name: 'guess',
-                value: 'string',
-                resolutions: {},
-                confirmationStatus: 'NONE',
-              },
-            },
-          },
-        })
-        .speak(speechText)
-        .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>What movie are these keywords and cast members associated with?</voice>"
-        )
-        .getResponse();
-    }
-  },
-};
-const AnswerIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AnswerIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('AnswerIntent handler called');
-    // answer intent for whose tagline game only
-    return handlerInput.responseBuilder
-      .addDirective({
-        type: 'Dialog.ElicitSlot',
-        slotToElicit: 'guess',
-        updatedIntent: {
-          name: 'GameResultsIntent',
-          confirmationStatus: 'NONE',
-          slots: {
-            guess: {
-              name: 'guess',
-              value: 'string',
-              resolutions: {},
-              confirmationStatus: 'NONE',
-            },
-          },
-        },
-      })
-      .speak(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Alright, what movie is this the tagline for?</voice>"
-      )
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Any guess is better than nothing.</voice>"
-      )
-      .getResponse();
-  },
-};
-const GameResultsIntent = {
-  canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'GameResultsIntent'
-    );
-  },
-  handle(handlerInput) {
-    console.log('GameResultsIntent handler called');
-    let guess = handlerInput.requestEnvelope.request.intent.slots.guess.value;
-    let attributes = handlerInput.attributesManager.getSessionAttributes();
-    // finalize game results for good word hunting game
-    if (attributes.type == 'goodWordHunting') {
-      // recap keywords
-      let speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Okay, to recap, the keywords for this movie where <break time='1s'/>'";
-      for (let i = 0; i < attributes.keywords.length; i++) {
-        if (attributes.keywords.length - 1 == i) {
-          speechText +=
-            'and ' + attributes.keywords[i] + ". <break time='1s'/>";
-        } else {
-          speechText += attributes.keywords[i] + ", <break time='1s'/>";
-        }
-      }
-      // compare answers
-      speechText +=
-        "Your guess was, '" +
-        guess +
-        "'. And the answer is, <break time='1s'/> '" +
-        attributes.movie +
-        "'. ";
-      let numberOfNamesLeft =
-        attributes.cast.length - attributes.numberNamesNeeded;
-      // give remaining names from highest to lowest billed
-      if (numberOfNamesLeft == 1) {
-        speechText += ' The remaining name was ' + attributes.cast[0] + '. ';
-      }
-      if (numberOfNamesLeft == 2) {
-        speechText +=
-          ' The remaining names from top billed to lowest were ' +
-          attributes.cast[0] +
-          ' and ' +
-          attributes.cast[1] +
-          '. ';
-      }
-      if (numberOfNamesLeft > 2) {
-        speechText += ' The remaining names from top billed to lowest were ';
-        for (var i = 0; i < numberOfNamesLeft; i++) {
-          if (i + 1 == numberOfNamesLeft) {
-            speechText += 'and ' + attributes.cast[i] + '. ';
-          } else {
-            speechText += attributes.cast[i] + ', ';
-          }
-        }
-      }
-      // prompt for new game
-      handlerInput.attributesManager.setSessionAttributes({
-        type: 'goodWordHunting',
-      });
-      speechText +=
-        'Thank you for playing, would you like to play another round?</voice>';
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>To play another round, please say 'play Good Word Hunting'.</voice>"
-        )
-        .getResponse();
-    }
-    // finalize game results for whose tagline is it anyway
-    else {
-      let speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Okay, to recap, the tagline was <break time='1s'/>'" +
-        attributes.tagline +
-        "'<break time='1s'/>. Your guess was, '" +
-        guess +
-        "'. And the answer is, <break time='1s'/> '" +
-        attributes.movie +
-        "' <break time='1s'/>. Thank you for playing. Would like to play another round?</voice>";
-      handlerInput.attributesManager.setSessionAttributes({
-        type: 'whoseTagline',
-      });
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>To play another round, please say 'play Whose Tagline Is It Anyway'.</voice>"
-        )
-        .getResponse();
-    }
-  },
-};
-
 const YesIntent = {
   canHandle(handlerInput) {
     return (
@@ -808,35 +476,35 @@ const RepeatIntent = {
 const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
   .addRequestHandlers(
-    LaunchRequestHandler,
-    WhoseTaglineIntent,
-    GoodWordHuntingIntent,
-    YesIntent,
-    RepeatIntent,
-    StartGameIntent,
-    MovieCastIntent,
-    HintIntent,
     AnswerIntent,
-    GameResultsIntent,
-    GetTaglineIntent,
-    GetMovieCastIntent,
-    HelpIntent,
-    HelpWhoseTaglineIntent,
-    HelpGWHIntent,
-    HelpGWHGroupIntent,
-    HelpGetTaglineIntent,
-    HelpGetCastIntent,
-    StopIntent,
-    CancelIntent,
-    NoIntent,
-    Fallback,
-    ShopIntent,
     BuyIntent,
     BuyResponseIntent,
+    CancelIntent,
+    Fallback,
+    GameResultsIntent,
+    GetMovieCastIntent,
+    GetTaglineIntent,
+    GoodWordHuntingIntent,
+    HelpIntent,
+    HelpGetCastIntent,
+    HelpGetTaglineIntent,
+    HelpGWHIntent,
+    HelpGWHGroupIntent,
+    HelpWhoseTaglineIntent,
+    HintIntent,
+    LaunchRequestHandler,
+    MovieCastIntent,
+    NoIntent,
+    PurchasedIntent,
     RefundIntent,
     RefundResponseHandler,
-    PurchasedIntent,
-    UnhandledHandler
+    RepeatIntent,
+    ShopIntent,
+    StartGameIntent,
+    StopIntent,
+    UnhandledHandler,
+    WhoseTaglineIntent,
+    YesIntent
   )
   .withSkillId('amzn1.ask.skill.9b659d16-b8f7-4401-ac19-d4d86a2b59b7')
   .withApiClient(new Alexa.DefaultApiClient())
