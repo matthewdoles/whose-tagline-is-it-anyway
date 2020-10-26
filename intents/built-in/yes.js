@@ -1,11 +1,11 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
-import { INTENT_REQUEST, YES_INTENT } from '../consts/intents';
-import { AnswerIntent } from './answer';
-import { GoodWordHuntingIntent } from './good-word-hunting';
-import { HelpIntent } from './help/help';
-import { HelpGWHIntent } from './help/help-gwh';
-import { StartGameIntent } from './start-game';
-import { WhoseTaglineIntent } from './whose-tagline';
+import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
+import { INTENT_REQUEST, YES_INTENT } from '../../consts/intents';
+import { AnswerIntent } from '../answer';
+import { GoodWordHuntingIntent } from '../good-word-hunting';
+import { HelpIntent } from '../help/help';
+import { HelpGWHIntent } from '../help/help-gwh';
+import { StartGameIntent } from '../start-game';
+import { WhoseTaglineIntent } from '../whose-tagline';
 
 export const YesIntent = {
   canHandle(handlerInput) {

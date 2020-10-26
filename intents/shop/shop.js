@@ -1,5 +1,5 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
-import { INTENT_REQUEST, SHOP_INTENT } from '../consts/intents';
+import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
+import { INTENT_REQUEST, SHOP_INTENT } from '../../consts/intents';
 
 export const ShopIntent = {
   canHandle(handlerInput) {

@@ -1,4 +1,4 @@
-import { CANCEL_INTENT, INTENT_REQUEST } from '../consts/intents';
+import { CANCEL_INTENT, INTENT_REQUEST } from '../../consts/intents';
 
 export const CancelIntent = {
   canHandle(handlerInput) {

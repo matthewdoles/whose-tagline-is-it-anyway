@@ -1,5 +1,5 @@
-import { PRODUCT_ID, VOICE_CLOSE, VOICE_NAME, VOICE_OPEN } from '../consts';
-import { INTENT_REQUEST, PURCHASED_INTENT } from '../consts/intents';
+import { PRODUCT_ID, VOICE_CLOSE, VOICE_NAME, VOICE_OPEN } from '../../consts';
+import { INTENT_REQUEST, PURCHASED_INTENT } from '../../consts/intents';
 
 export const PurchasedIntent = {
   canHandle(handlerInput) {

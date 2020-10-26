@@ -7,10 +7,10 @@ const { UnhandledHandler } = require('./handlers/unhandled');
 
 // intents
 const { AnswerIntent } = require('./intents/answer');
-const { BuyIntent } = require('./intents/buy');
+const { BuyIntent } = require('./intents/shop/buy');
 const { BuyResponseIntent } = require('./handlers/buy-response');
-const { CancelIntent } = require('./intents/cancel');
-const { Fallback } = require('./intents/fallback');
+const { CancelIntent } = require('./intents/built-in/cancel');
+const { Fallback } = require('./intents/built-in/fallback');
 const { GameResultsIntent } = require('./intents/game-results');
 const { GetMovieCastIntent } = require('./intents/get-movie-cast');
 const { GetTaglineIntent } = require('./intents/get-tagline');
@@ -23,15 +23,15 @@ const { HelpGWHGroupIntent } = require('./intents/help/help-gwh-group');
 const { HelpWhoseTaglineIntent } = require('./intents/help/help-whose-tagline');
 const { HintIntent } = require('./intents/hint');
 const { MovieCastIntent } = require('./intents/movie-cast');
-const { NoIntent } = require('./intents/no');
-const { PurchasedIntent } = require('./intents/purchased');
-const { RefundIntent } = require('./intents/refund');
+const { NoIntent } = require('./intents/built-in/no');
+const { PurchasedIntent } = require('./intents/shop/purchased');
+const { RefundIntent } = require('./intents/shop/refund');
 const { RepeatIntent } = require('./intents/repeat');
-const { ShopIntent } = require('./intents/shop');
+const { ShopIntent } = require('./intents/shop/shop');
 const { StartGameIntent } = require('./intents/start-game');
-const { StopIntent } = require('./intents/stop');
+const { StopIntent } = require('./intents/built-in/stop');
 const { WhoseTaglineIntent } = require('./intents/whose-tagline');
-const { YesIntent } = require('./intents/yes');
+const { YesIntent } = require('./intents/built-in/yes');
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
