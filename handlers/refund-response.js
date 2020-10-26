@@ -1,11 +1,9 @@
-import { VOICE_NAME } from '../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
 
 export const RefundResponseHandler = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'Connections.Response' &&
-      handlerInput.requestEnvelope.request.name === 'Cancel'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === 'Connections.Response' && input.name === 'Cancel';
   },
   handle(handlerInput) {
     const locale = handlerInput.requestEnvelope.request.locale;
@@ -18,13 +16,14 @@ export const RefundResponseHandler = {
           'ACCEPTED'
         ) {
           const speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Your request to refund Good Word Hunting has been processed. Would you like to resume playing Whose Tagline Is It Anyway instead?</voice>";
+            VOICE_OPEN +
+            'Your request to refund Good Word Hunting has been processed. ' +
+            'Would you like to resume playing Whose Tagline Is It Anyway instead?' +
+            VOICE_CLOSE;
           const repromptText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Would you like to play a game of Whose Tagline Is It Anyway?</voice>";
+            VOICE_OPEN +
+            'Would you like to play a game of Whose Tagline Is It Anyway?' +
+            VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             type: 'whoseTagline',
           });
@@ -39,13 +38,15 @@ export const RefundResponseHandler = {
           'NOT_ENTITLED'
         ) {
           const speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, you don't seem to have any purchases available for a refund. This skill has one game available for purchase called Good Word Hunting. Would you like to hear about it?</voice>";
+            VOICE_OPEN +
+            "Sorry, you don't seem to have any purchases available for a refund. " +
+            'This skill has one game available for purchase called Good Word Hunting. ' +
+            'Would you like to hear about it?' +
+            VOICE_CLOSE;
           const repromptText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Would you like to hear about Good Word Hunting?</voice>";
+            VOICE_OPEN +
+            'Would you like to hear about Good Word Hunting?' +
+            VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             type: 'goodWordHuntingHelp',
           });
@@ -58,7 +59,10 @@ export const RefundResponseHandler = {
 
       return handlerInput.responseBuilder
         .speak(
-          'There was an error handling your purchase request. Please try again or contact us for help.'
+          VOICE_OPEN +
+            'There was an error handling your purchase request. ' +
+            'Please try again or contact us for help.' +
+            VOICE_CLOSE
         )
         .getResponse();
     });

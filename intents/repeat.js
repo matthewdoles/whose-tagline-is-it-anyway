@@ -1,16 +1,16 @@
-import { VOICE_NAME } from '../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
+import { INTENT_REQUEST, REPEAT_INTENT } from '../consts/intents';
 import { StartGameIntent } from './start-game';
 
 export const RepeatIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'RepeatIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.intent.name === REPEAT_INTENT;
   },
   handle(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let speechText = '';
+
     if (attributes.repeat) {
       switch (attributes.repeat) {
         // if repeat for whose tagline, recall intent and pass variables
@@ -27,11 +27,11 @@ export const RepeatIntent = {
         // if repeat for good word hunting, give keywords and appropriate names within repeat intent, do not re-call MovieCastIntent
         case 'goodWordHunting':
           let speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>The " +
+            VOICE_OPEN +
+            'The ' +
             attributes.keywords.length +
             " keywords used to describe this film are <break time='1s'/>";
+
           for (let i = 0; i < 5; i++) {
             if (i == 4) {
               speechText +=
@@ -40,10 +40,12 @@ export const RepeatIntent = {
               speechText += attributes.keywords[i] + ", <break time='1s'/>";
             }
           }
+
           speechText +=
             'The ' +
             attributes.numberNamesNeeded +
             ' names from lowest billed to highest are ';
+
           let castIndex = attributes.cast.length - 1;
           for (let i = 1; i <= attributes.numberNamesNeeded; i++) {
             if (i == attributes.numberNamesNeeded) {
@@ -54,8 +56,11 @@ export const RepeatIntent = {
             }
             castIndex--;
           }
+
           speechText +=
-            "With that, I'll give you a few more seconds to think of your answer. <break time='4s'/> Alright, what movie are these keywords and cast members associated with?</voice>";
+            "With that, I'll give you a few more seconds to think of your answer. <break time='4s'/>" +
+            'Alright, what movie are these keywords and cast members associated with?' +
+            VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             cast: attributes.cast,
             movieId: attributes.movieId,
@@ -84,29 +89,27 @@ export const RepeatIntent = {
               },
             })
             .speak(speechText)
-            .reprompt(
-              "<voice name='" + VOICE_NAME + "'>What movie is it?</voice>"
-            )
+            .reprompt(VOICE_OPEN + 'What movie is it?' + VOICE_CLOSE)
             .getResponse();
         default:
           speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, I am not sure what you are wanting me to repeat. Would you like some help?</voice>";
+            VOICE_OPEN +
+            'Sorry, I am not sure what you are wanting me to repeat. ' +
+            'Would you like some help?' +
+            VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
       }
     } else {
       speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, I am not sure what you are wanting me to repeat. Would you like some help?</voice>";
+        VOICE_OPEN +
+        'Sorry, I am not sure what you are wanting me to repeat. ' +
+        'Would you like some help?' +
+        VOICE_CLOSE;
       handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
     }
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(
-        "<voice name='" + VOICE_NAME + "'Would you like some help?</voice>"
-      )
+      .reprompt(VOICE_OPEN + 'Would you like some help?' + VOICE_CLOSE)
       .getResponse();
   },
 };

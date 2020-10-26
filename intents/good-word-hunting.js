@@ -1,11 +1,11 @@
-const { VOICE_NAME, PRODUCT_ID } = require('../consts');
+import { GOOD_WORD_HUNTING, INTENT_REQUEST } from '../consts/intents';
+import { PRODUCT_ID, VOICE_OPEN, VOICE_CLOSE } from '../consts/';
 
 export const GoodWordHuntingIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name ===
-        'GoodWordHuntingIntent'
+      input.type === INTENT_REQUEST && input.intent.name === GOOD_WORD_HUNTING
     );
   },
   handle(handlerInput) {
@@ -16,37 +16,32 @@ export const GoodWordHuntingIntent = {
     return ms.getInSkillProduct(locale, PRODUCT_ID).then(function (result) {
       if (result.entitled == 'ENTITLED') {
         // set game type to good word hunting, call start game intent
-        let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to play Good Word Hunting with extended time?</voice>";
-        let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to play Good Word Hunting with extended time?</voice>";
+        let responseText =
+          VOICE_OPEN +
+          'Would you like to play Good Word Hunting with extended time?</voice>' +
+          VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: 'goodWordHuntingStart',
         });
         return handlerInput.responseBuilder
-          .speak(speechText)
-          .reprompt(repromptText)
+          .speak(responseText)
+          .reprompt(responseText)
           .getResponse();
       } else {
         // user not eligible to play, ask if they would like to hear game description
-        let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, it seems you haven't purchased the rights to play Good Word Hunting. Would you like to hear a little bit about this game?</voice>";
-        let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to hear a little bit about Good Word Hunting?</voice>";
+        let helpText = 'Would you like to hear a little bit about this game?';
+        let responseText =
+          VOICE_OPEN +
+          "Sorry, it seems you haven't purchased the rights to play Good Word Hunting. " +
+          helpText +
+          VOICE_CLOSE;
+
         handlerInput.attributesManager.setSessionAttributes({
           type: 'goodWordHuntingHelp',
         });
         return handlerInput.responseBuilder
-          .speak(speechText)
-          .reprompt(repromptText)
+          .speak(responseText)
+          .reprompt(helpText)
           .getResponse();
       }
     });

@@ -1,4 +1,5 @@
-import { VOICE_NAME } from '../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
+import { INTENT_REQUEST, YES_INTENT } from '../consts/intents';
 import { AnswerIntent } from './answer';
 import { GoodWordHuntingIntent } from './good-word-hunting';
 import { HelpIntent } from './help/help';
@@ -8,14 +9,16 @@ import { WhoseTaglineIntent } from './whose-tagline';
 
 export const YesIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.YesIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.intent.name === YES_INTENT;
   },
   async handle(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     let speechText = '';
+    let unknownResponse =
+      VOICE_OPEN +
+      'Sorry, I am not sure what you are saying yes for. Would you like some help?' +
+      VOICE_CLOSE;
 
     if (attributes.type) {
       switch (attributes.type) {
@@ -36,25 +39,17 @@ export const YesIntent = {
         case 'help':
           return HelpIntent.handle(handlerInput);
         default:
-          speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, I am not sure what you are saying yes for. Would you like some help?</voice>";
+          speechText = unknownResponse;
           handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
       }
     } else {
-      speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, I am not sure what you are saying yes for. Would you like some help?</voice>";
+      speechText = unknownResponse;
       handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
     }
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(
-        "<voice name='" + VOICE_NAME + "'Would you like some help?</voice>"
-      )
+      .reprompt(VOICE_OPEN + 'Would you like some help?' + VOICE_CLOSE)
       .getResponse();
   },
 };

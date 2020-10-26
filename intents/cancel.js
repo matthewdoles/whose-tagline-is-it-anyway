@@ -1,9 +1,9 @@
+import { CANCEL_INTENT, INTENT_REQUEST } from '../consts/intents';
+
 export const CancelIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.intent.name === CANCEL_INTENT;
   },
   handle(handlerInput) {
     // cancel intent, exit skill

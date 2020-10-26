@@ -1,10 +1,12 @@
+import { INTENT_REQUEST, WHOSE_TAGLINE_INTENT } from '../consts/intents';
 import { StartGameIntent } from './start-game';
 
 export const WhoseTaglineIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'WhoseTaglineIntent'
+      input.type === INTENT_REQUEST &&
+      input.intent.name === WHOSE_TAGLINE_INTENT
     );
   },
   handle(handlerInput) {

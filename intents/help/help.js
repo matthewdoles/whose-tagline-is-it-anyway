@@ -1,28 +1,29 @@
-import { VOICE_NAME } from '../../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
+import { HELP_INTENT, INTENT_REQUEST } from '../../consts/intents';
 
 export const HelpIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent'
+      input.request.type === INTENT_REQUEST && input.intent.name === HELP_INTENT
     );
   },
   handle(handlerInput) {
     // list help options available
     return handlerInput.responseBuilder
       .speak(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>For help and information about Whose Tagline Is It Anyway, please say 'help with Whose Tagline Is It Anyway'. " +
-          "For help and information about Good Word Hunting, please say 'help with Good Word Hunting'. " +
-          "For help and information about getting the tagline for a specific movie, please say 'help with getting movie tagline'. " +
-          "And for help and information about getting the cast for a specific movie, please say 'help with getting movie cast'. </voice>"
+        VOICE_OPEN +
+          'For help and information about Whose Tagline Is It Anyway, ' +
+          "please say 'help with Whose Tagline Is It Anyway'. " +
+          'For help and information about Good Word Hunting, ' +
+          "please say 'help with Good Word Hunting'. " +
+          'For help and information about getting the tagline for a specific movie, ' +
+          "please say 'help with getting movie tagline'. " +
+          'And for help and information about getting the cast for a specific movie, ' +
+          "please say 'help with getting movie cast'." +
+          VOICE_CLOSE
       )
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>What area can I help you with?</voice>"
-      )
+      .reprompt(VOICE_OPEN + 'What area can I help you with?' + VOICE_CLOSE)
       .getResponse();
   },
 };

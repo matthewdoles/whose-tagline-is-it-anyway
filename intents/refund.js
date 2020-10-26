@@ -1,11 +1,10 @@
-const { PRODUCT_ID } = require('../consts');
+import { INTENT_REQUEST, REFUND_INTENT } from '../consts/intents';
+import { PRODUCT_ID } from '../consts';
 
 export const RefundIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'RefundIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.intent.name === REFUND_INTENT;
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder

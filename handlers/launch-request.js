@@ -1,4 +1,4 @@
-import { PRODUCT_ID, VOICE_NAME } from '../consts';
+import { PRODUCT_ID, VOICE_CLOSE, VOICE_OPEN } from '../consts';
 
 export const LaunchRequestHandler = {
   canHandle(handlerInput) {
@@ -13,13 +13,14 @@ export const LaunchRequestHandler = {
       if (result.entitled == 'ENTITLED') {
         // use yes intent in reprompt to fire help intent
         const speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Hello, which game would you like to play: Whose Tagline Is It Anyway, or Good Word Hunting</voice>";
+          VOICE_OPEN +
+          'Hello, which game would you like to play: ' +
+          'Whose Tagline Is It Anyway, or Good Word Hunting' +
+          VOICE_CLOSE;
         const repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I did not quite understand that. Would you like help?</voice>";
+          VOICE_OPEN +
+          'Sorry, I did not quite understand that. Would you like help?' +
+          VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
 
         return handlerInput.responseBuilder
@@ -29,13 +30,16 @@ export const LaunchRequestHandler = {
       } else {
         // use yes intent to fire whose tagline intent (game)
         const speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Hello, welcome to Whose Tagline Is It Anyway. Would you like to play a quick round? Or, for more information, please say 'help'</voice>";
+          VOICE_OPEN +
+          'Hello, welcome to Whose Tagline Is It Anyway. ' +
+          'Would you like to play a quick round?  ' +
+          "Or, for more information, please say 'help'" +
+          VOICE_CLOSE;
         const repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I did not quite understand that. If you would like more information, please say 'help'.</voice>";
+          VOICE_OPEN +
+          'Sorry, I did not quite understand that. ' +
+          "If you would like more information, please say 'help'." +
+          VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: 'whoseTagline',
         });

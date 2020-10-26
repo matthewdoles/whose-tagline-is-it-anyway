@@ -1,11 +1,12 @@
-import { VOICE_NAME } from '../consts';
+import { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } from '../consts';
+import { GET_TAGLINE_INTENT, INTENT_REQUEST } from '../consts/intents';
 import { getMovieTagline, searchForMovie } from '../functions/movies';
 
 export const GetTaglineIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'GetTaglineIntent'
+      input.type === INTENT_REQUEST && input.intent.name === GET_TAGLINE_INTENT
     );
   },
   async handle(handlerInput) {
@@ -27,50 +28,43 @@ export const GetTaglineIntent = {
           const movieTitle = result.original_title;
           const movieYear = result.release_date;
           speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>The tagline for " +
+            VOICE_CLOSE +
+            'The tagline for ' +
             movieTitle +
             ' from ' +
             movieYear.substring(0, 4) +
             " is <break time='1s'/>" +
             movieTagline +
-            '. </voice>';
+            '. ' +
+            VOICE_CLOSE;
         } catch (error) {
           speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, an error occurred getting data from The Movie Database. Please try again. </voice>";
+            VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
         }
       }
       // if no result found, reprompt user to include the year of the movie after the title
       else {
         speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I was not able to find a match for " +
+          VOICE_OPEN +
+          'Sorry, I was not able to find a match for ' +
           movieInput +
           '. Try including the year after the title by saying ' +
-          "get the tagline for 'insert movie' from 'insert year'. </voice>";
+          "get the tagline for 'insert movie' from 'insert year'. " +
+          VOICE_CLOSE;
       }
     } catch (error) {
       speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, an error occurred getting data from The Movie Database. Please try again. </voice>";
+        VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
     }
-    speechText +=
-      "<voice name='" +
-      VOICE_NAME +
-      "'>If you would like to get the tagline for another movie, please say get tagline for 'insert movie'.</voice>";
+    let closingText =
+      VOICE_OPEN +
+      "If you would like to get the tagline for another movie, please say get tagline for 'insert movie'." +
+      VOICE_CLOSE;
+    speechText += closingText;
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>If you would like to get the tagline for another movie, please say get tagline for 'insert movie'.</voice>"
-      )
+      .reprompt(closingText)
       .getResponse();
   },
 };

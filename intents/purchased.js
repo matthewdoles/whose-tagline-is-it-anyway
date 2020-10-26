@@ -1,10 +1,11 @@
-import { PRODUCT_ID, VOICE_NAME } from '../consts';
+import { PRODUCT_ID, VOICE_CLOSE, VOICE_NAME, VOICE_OPEN } from '../consts';
+import { INTENT_REQUEST, PURCHASED_INTENT } from '../consts/intents';
 
 export const PurchasedIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'PurchasedIntent'
+      input.type === INTENT_REQUEST && input.intent.name === PURCHASED_INTENT
     );
   },
   handle(handlerInput) {
@@ -16,13 +17,14 @@ export const PurchasedIntent = {
       if (result.entitled == 'ENTITLED') {
         // set game type to good word hunting, call start game intent
         let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>You have purchased the rights to play Good Word Hunting. Would you like to play a quick game?</voice>";
+          VOICE_OPEN +
+          'You have purchased the rights to play Good Word Hunting. ' +
+          'Would you like to play a quick game?' +
+          VOICE_CLOSE;
         let repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to play a game of Good Word Hunting?</voice>";
+          VOICE_OPEN +
+          'Would you like to play a game of Good Word Hunting?' +
+          VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: 'goodWordHuntingStart',
         });
@@ -32,11 +34,10 @@ export const PurchasedIntent = {
           .reprompt(repromptText)
           .getResponse();
       } else {
-        // user not eligible to play, ask if they would like to hear game description
         let speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>You have not made any in-skill purchases.</voice>";
+          VOICE_OPEN +
+          'You have not made any in-skill purchases.' +
+          VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: 'goodWordHuntingHelp',
         });

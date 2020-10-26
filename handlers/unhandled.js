@@ -1,14 +1,14 @@
-import { VOICE_NAME } from '../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
 
 export const UnhandledHandler = {
   canHandle() {
     return true;
   },
   handle(handlerInput, error) {
-    let speechText =
-      "<voice name='" +
-      VOICE_NAME +
-      "'>Sorry, I am not quite sure what to do.</voice>";
-    return handlerInput.responseBuilder.speak(speechText).getResponse();
+    return handlerInput.responseBuilder
+      .speak(
+        VOICE_OPEN + 'Sorry, I am not quite sure what to do.' + VOICE_CLOSE
+      )
+      .getResponse();
   },
 };

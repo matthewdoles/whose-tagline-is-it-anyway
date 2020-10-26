@@ -1,11 +1,10 @@
 import { PRODUCT_ID } from '../consts';
+import { BUY_INTENT, INTENT_REQUEST } from '../consts/intents';
 
 export const BuyIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'BuyIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.intent.name === BUY_INTENT;
   },
   handle(handlerInput) {
     return handlerInput.responseBuilder

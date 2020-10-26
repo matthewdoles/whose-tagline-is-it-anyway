@@ -1,18 +1,19 @@
-import { VOICE_NAME } from '../consts';
+import { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } from '../consts';
+import { GET_MOVIE_CAST_INTENT, INTENT_REQUEST } from '../consts/intents';
 import { getMovieCredits, searchForMovie } from '../functions/movies';
 
 export const GetMovieCastIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'GetMovieCastIntent'
+      input.type === INTENT_REQUEST &&
+      input.intent.name === GET_MOVIE_CAST_INTENT
     );
   },
   async handle(handlerInput) {
-    const movieInput =
-      handlerInput.requestEnvelope.request.intent.slots.movie.value;
-    const yearInput =
-      handlerInput.requestEnvelope.request.intent.slots.year.value;
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const movieInput = slots.movie.value;
+    const yearInput = slots.year.value;
     let speechText = '';
 
     // search for movie based on user input
@@ -29,9 +30,8 @@ export const GetMovieCastIntent = {
             // if movie has more than 10 credits, only name the top 10 from highest billed to lowest
             if (credits.cast.length < 10) {
               speechText =
-                "<voice name='" +
-                VOICE_NAME +
-                "'>There are only " +
+                VOICE_OPEN +
+                'There are only ' +
                 credits.cast.length +
                 ' cast members for ' +
                 movieTitle +
@@ -45,7 +45,8 @@ export const GetMovieCastIntent = {
                   speechText +=
                     'and ' +
                     credits.cast[i].name +
-                    ". <break time='1s'/></voice>";
+                    ". <break time='1s'/>" +
+                    VOICE_CLOSE;
                 } else {
                   speechText += credits.cast[i].name + ", <break time='1s'/>";
                 }
@@ -54,9 +55,8 @@ export const GetMovieCastIntent = {
             // if movie has less than 10 credits, name them all from highest billed to lowest
             else {
               speechText =
-                "<voice name='" +
-                VOICE_NAME +
-                "'>There are over 10 cast members for " +
+                VOICE_OPEN +
+                'There are over 10 cast members for ' +
                 movieTitle +
                 ' from ' +
                 movieYear.substring(0, 4) +
@@ -66,7 +66,8 @@ export const GetMovieCastIntent = {
                   speechText +=
                     'and ' +
                     credits.cast[i].name +
-                    ". <break time='1s'/></voice>";
+                    ". <break time='1s'/>" +
+                    VOICE_CLOSE;
                 } else {
                   speechText += credits.cast[i].name + ", <break time='1s'/>";
                 }
@@ -75,39 +76,31 @@ export const GetMovieCastIntent = {
           }
         } catch (error) {
           speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Sorry, an error occurred getting data from The Movie Database. Please try again. </voice>";
+            VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
         }
-      }
-      // if no result found, reprompt user to include the year of the movie after the title
-      else {
+      } else {
+        // if no result found, reprompt user to include the year of the movie after the title
         speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, I was not able to find a match for " +
+          VOICE_OPEN +
+          'Sorry, I was not able to find a match for ' +
           movieInput +
           '. Try including the year after the title by saying ' +
-          "get the cast for 'insert movie' from 'insert year'. </voice>";
+          "get the cast for 'insert movie' from 'insert year'. " +
+          VOICE_CLOSE;
       }
     } catch (error) {
       speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, an error occurred getting data from The Movie Database. Please try again. </voice>";
+        VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
     }
-    speechText +=
-      "<voice name='" +
-      VOICE_NAME +
-      "'>If you would like to get the cast for another movie, please say get cast for 'insert movie'.</voice>";
+    let closingText =
+      VOICE_OPEN +
+      "If you would like to get the cast for another movie, please say get cast for 'insert movie'." +
+      VOICE_CLOSE;
+    speechText += closingText;
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>If you would like to get the cast for another movie, please say get cast for 'insert movie'.</voice>"
-      )
+      .reprompt(closingText)
       .getResponse();
   },
 };

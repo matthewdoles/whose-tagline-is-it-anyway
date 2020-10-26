@@ -8,7 +8,7 @@ const { UnhandledHandler } = require('./handlers/unhandled');
 // intents
 const { AnswerIntent } = require('./intents/answer');
 const { BuyIntent } = require('./intents/buy');
-const { BuyResponseIntent } = require('./intents/buy-response');
+const { BuyResponseIntent } = require('./handlers/buy-response');
 const { CancelIntent } = require('./intents/cancel');
 const { Fallback } = require('./intents/fallback');
 const { GameResultsIntent } = require('./intents/game-results');

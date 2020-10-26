@@ -1,4 +1,5 @@
-const { VOICE_NAME } = require('../consts');
+const { VOICE_CLOSE, VOICE_OPEN, MOVIEDB_ERROR } = require('../consts');
+import { INTENT_REQUEST, START_GAME_INTENT } from '../consts/intents';
 import {
   getMovieKeywords,
   getMovieTagline,
@@ -8,10 +9,8 @@ import { WhoseTaglineIntent } from './whose-tagline';
 
 export const StartGameIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'StartGameIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.name === START_GAME_INTENT;
   },
   async handle(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -39,14 +38,9 @@ export const StartGameIntent = {
           year = randomMovie.results[randomIndex].release_date;
         }
       } catch (error) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, an error occurred getting data from The Movie Database. Would you like to try again?</voice>";
-        repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to try again?</voice>";
+        const replyText = 'Would you like to try again?';
+        speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
+        repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: attributes.type,
         });
@@ -64,17 +58,16 @@ export const StartGameIntent = {
         const tagline = result.tagline;
         //if tagline is not blank, continue with game
         if (tagline) {
+          const replyText =
+            'Okay, what would you like to do? Repeat the tagline, get a hint, or answer.';
           speechText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>Alright, the tagline for this movie is, '<break time='1s'/>" +
+            VOICE_OPEN +
+            "Alright, the tagline for this movie is, '<break time='1s'/>" +
             tagline +
             "<break time='1s'/>'. I'll give you a few seconds to think on it. <break time='4s'/>" +
-            'Okay, what would you like to do? Repeat the tagline, get a hint, or answer.</voice>';
-          repromptText =
-            "<voice name='" +
-            VOICE_NAME +
-            "'>What would you like to do? Repeat the tagline, get a hint, or answer.</voice>";
+            replyText +
+            VOICE_CLOSE;
+          repromptText = "<voice name='" + VOICE_NAME + replyText + VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             type: 'answer',
             tagline: tagline,
@@ -95,14 +88,12 @@ export const StartGameIntent = {
         }
       } catch (error) {
         speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, an error occurred getting data from The Movie Database. Please try again.</voice>";
+          VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
       }
     }
     // if game is good word hunting, make api call for keywords then cast members
     else if (attributes.type == 'goodWordHunting') {
-      speechText += "<voice name='" + VOICE_NAME + "'>";
+      speechText += VOICE_OPEN;
       // if game is extended time, prompt so
       if (attributes.time == '20s') {
         speechText +=
@@ -136,9 +127,10 @@ export const StartGameIntent = {
           // if more than 5 words available to describe movie, list the first 5
           else {
             speechText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>I'll give you 5 keywords used to describe this film. Which are <break time='1s'/>";
+              VOICE_OPEN +
+              "I'll give you 5 keywords used to describe this film. " +
+              "Which are <break time='1s'/>";
+
             for (let i = 0; i < 5; i++) {
               if (i == 4) {
                 speechText +=
@@ -163,7 +155,7 @@ export const StartGameIntent = {
               // if less than 10, note the max number of cast members for movie
               if (credits.cast.length < 10) {
                 speechText +=
-                  '>There are only ' +
+                  'There are only ' +
                   credits.cast.length +
                   ' cast members for this film. Out of these ' +
                   credits.cast.length +
@@ -185,9 +177,10 @@ export const StartGameIntent = {
               // if extended time, break for 20 seconds to allow for bidding time
               if (attributes.time == '20s') {
                 speechText +=
-                  "Bidding will commence now. <break time='10s'/><break time='10s'/> Okay, successful bidder, how many names will it be?";
+                  "Bidding will commence now. <break time='10s'/><break time='10s'/> " +
+                  'Okay, successful bidder, how many names will it be?';
               }
-              speechText += '</voice>';
+              speechText += VOICE_CLOSE;
             }
             // set session variables, elicit slot for number of names needed
             handlerInput.attributesManager.setSessionAttributes({
@@ -218,20 +211,15 @@ export const StartGameIntent = {
               })
               .speak(speechText)
               .reprompt(
-                "<voice name='" +
-                  VOICE_NAME +
-                  "'>How many names do you need to name this movie?</voice>"
+                VOICE_OPEN +
+                  'How many names do you need to name this movie?' +
+                  VOICE_CLOSE
               )
               .getResponse();
           } catch (error) {
-            speechText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>Sorry, an error occurred getting data from The Movie Database. Would you like to try again?</voice>";
-            repromptText =
-              "<voice name='" +
-              VOICE_NAME +
-              "'>Would you like to try again?</voice>";
+            const replyText = 'Would you like to try again?';
+            speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
+            repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
             handlerInput.attributesManager.setSessionAttributes({
               type: attributes.type,
             });
@@ -242,14 +230,9 @@ export const StartGameIntent = {
           }
         }
       } catch (error) {
-        speechText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Sorry, an error occurred getting data from The Movie Database. Would you like to try again?</voice>";
-        repromptText =
-          "<voice name='" +
-          VOICE_NAME +
-          "'>Would you like to try again?</voice>";
+        const replyText = 'Would you like to try again?';
+        speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
+        repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: attributes.type,
         });
@@ -259,12 +242,9 @@ export const StartGameIntent = {
           .getResponse();
       }
     } else {
-      speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Sorry, an error occurred getting data from The Movie Database. Would you like to try again?</voice>";
-      repromptText =
-        "<voice name='" + VOICE_NAME + "'>Would you like to try again?</voice>";
+      const replyText = 'Would you like to try again?';
+      speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
+      repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
       handlerInput.attributesManager.setSessionAttributes({
         type: attributes.type,
       });

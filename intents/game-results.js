@@ -1,10 +1,11 @@
-import { VOICE_NAME } from '../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
+import { GAME_RESULTS_INTENT, INTENT_REQUEST } from '../consts/intents';
 
 export const GameResultsIntent = {
   canHandle(handlerInput) {
+    const input = handlerInput.requestEnvelope.request;
     return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'GameResultsIntent'
+      input.type === INTENT_REQUEST && input.intent.name === GAME_RESULTS_INTENT
     );
   },
   handle(handlerInput) {
@@ -15,9 +16,8 @@ export const GameResultsIntent = {
     if (attributes.type == 'goodWordHunting') {
       // recap keywords
       let speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Okay, to recap, the keywords for this movie where <break time='1s'/>'";
+        VOICE_OPEN +
+        "Okay, to recap, the keywords for this movie were <break time='1s'/>'";
       for (let i = 0; i < attributes.keywords.length; i++) {
         if (attributes.keywords.length - 1 == i) {
           speechText +=
@@ -62,37 +62,38 @@ export const GameResultsIntent = {
         type: 'goodWordHunting',
       });
       speechText +=
-        'Thank you for playing, would you like to play another round?</voice>';
+        'Thank you for playing, would you like to play another round?' +
+        VOICE_CLOSE;
       return handlerInput.responseBuilder
         .speak(speechText)
         .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>To play another round, please say 'play Good Word Hunting'.</voice>"
+          VOICE_OPEN +
+            "To play another round, please say 'play Good Word Hunting" +
+            VOICE_CLOSE
         )
         .getResponse();
     }
     // finalize game results for whose tagline is it anyway
     else {
       let speechText =
-        "<voice name='" +
-        VOICE_NAME +
-        "'>Okay, to recap, the tagline was <break time='1s'/>'" +
+        VOICE_OPEN +
+        "Okay, to recap, the tagline was <break time='1s'/>'" +
         attributes.tagline +
         "'<break time='1s'/>. Your guess was, '" +
         guess +
         "'. And the answer is, <break time='1s'/> '" +
         attributes.movie +
-        "' <break time='1s'/>. Thank you for playing. Would like to play another round?</voice>";
+        "' <break time='1s'/>. Thank you for playing. Would like to play another round?" +
+        VOICE_CLOSE;
       handlerInput.attributesManager.setSessionAttributes({
         type: 'whoseTagline',
       });
       return handlerInput.responseBuilder
         .speak(speechText)
         .reprompt(
-          "<voice name='" +
-            VOICE_NAME +
-            "'>To play another round, please say 'play Whose Tagline Is It Anyway'.</voice>"
+          VOICE_OPEN +
+            "To play another round, please say 'play Whose Tagline Is It Anyway'." +
+            VOICE_CLOSE
         )
         .getResponse();
     }

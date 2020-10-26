@@ -1,11 +1,10 @@
-import { VOICE_NAME } from '../consts';
+import { VOICE_OPEN, VOICE_CLOSE } from '../consts';
+import { ANSWER_INTENT, INTENT_REQUEST } from '../consts/intents';
 
 export const AnswerIntent = {
   canHandle(handlerInput) {
-    return (
-      handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
-      handlerInput.requestEnvelope.request.intent.name === 'AnswerIntent'
-    );
+    const input = handlerInput.requestEnvelope.request;
+    return input.type === INTENT_REQUEST && input.intent.name === ANSWER_INTENT;
   },
   handle(handlerInput) {
     // answer intent for whose tagline game only
@@ -27,15 +26,11 @@ export const AnswerIntent = {
         },
       })
       .speak(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Alright, what movie is this the tagline for?</voice>"
+        VOICE_OPEN +
+          'Alright, what movie is this the tagline for?' +
+          VOICE_CLOSE
       )
-      .reprompt(
-        "<voice name='" +
-          VOICE_NAME +
-          "'>Any guess is better than nothing.</voice>"
-      )
+      .reprompt(VOICE_OPEN + 'Any guess is better than nothing.' + VOICE_CLOSE)
       .getResponse();
   },
 };
