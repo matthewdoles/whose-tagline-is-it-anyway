@@ -1,4 +1,12 @@
-const StartGameIntent = {
+const { VOICE_NAME } = require('../consts');
+import {
+  getMovieKeywords,
+  getMovieTagline,
+  getRandomMovie,
+} from '../functions/movies';
+import { WhoseTaglineIntent } from './whose-tagline';
+
+export const StartGameIntent = {
   canHandle(handlerInput) {
     return (
       handlerInput.requestEnvelope.request.type === 'IntentRequest' &&
@@ -6,30 +14,29 @@ const StartGameIntent = {
     );
   },
   async handle(handlerInput) {
-    console.log('StartGameIntent handler called');
-    let attributes = handlerInput.attributesManager.getSessionAttributes();
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
     let speechText = '';
     let repromptText = '';
-    var movieId = attributes.movieId;
-    var movie = attributes.movie;
-    var year = attributes.year;
-    var hint = attributes.hint;
+    let movieId = attributes.movieId;
+    let movie = attributes.movie;
+    let year = attributes.year;
+    let hint = attributes.hint;
     if (hint == undefined) {
       hint = 1;
     }
-    console.log(movieId);
+
     // get a random popular movie if this intent is not being repeated
     if (attributes.movieId == undefined) {
       try {
-        let random_movie = await getRandomMovie();
-        if (random_movie.results.length > 0) {
+        const randomMovie = await getRandomMovie();
+        if (randomMovie.results.length > 0) {
           // save variables for random movie
-          let random_index = Math.floor(
-            Math.random() * random_movie.results.length
+          const randomIndex = Math.floor(
+            Math.random() * randomMovie.results.length
           );
-          movieId = random_movie.results[random_index].id;
-          movie = random_movie.results[random_index].title;
-          year = random_movie.results[random_index].release_date;
+          movieId = randomMovie.results[randomIndex].id;
+          movie = randomMovie.results[randomIndex].title;
+          year = randomMovie.results[randomIndex].release_date;
         }
       } catch (error) {
         speechText =
@@ -43,18 +50,18 @@ const StartGameIntent = {
         handlerInput.attributesManager.setSessionAttributes({
           type: attributes.type,
         });
-        console.log(error);
         return handlerInput.responseBuilder
           .speak(speechText)
           .reprompt(repromptText)
           .getResponse();
       }
     }
+
     // if game is whose tagline, make api call for tagline
     if (attributes.type == 'whoseTagline') {
       try {
-        let random_movie_tagline = await getMovieTagline(movieId);
-        let tagline = random_movie_tagline.tagline;
+        const result = await getMovieTagline(movieId);
+        const tagline = result.tagline;
         //if tagline is not blank, continue with game
         if (tagline) {
           speechText =
@@ -91,7 +98,6 @@ const StartGameIntent = {
           "<voice name='" +
           VOICE_NAME +
           "'>Sorry, an error occurred getting data from The Movie Database. Please try again.</voice>";
-        console.log(error);
       }
     }
     // if game is good word hunting, make api call for keywords then cast members
@@ -150,20 +156,20 @@ const StartGameIntent = {
           }
           // after getting and listing off keywords, determine number of cast members for movie
           try {
-            let random_movie_credits = await getMovieCredits(movieId);
+            const credits = await getMovieCredits(movieId);
             speechText += "<break time='1s'/> ";
             let cast = [];
-            if (random_movie_credits.cast.length != 0) {
+            if (credits.cast.length != 0) {
               // if less than 10, note the max number of cast members for movie
-              if (random_movie_credits.cast.length < 10) {
+              if (credits.cast.length < 10) {
                 speechText +=
                   '>There are only ' +
-                  random_movie_credits.cast.length +
+                  credits.cast.length +
                   ' cast members for this film. Out of these ' +
-                  random_movie_credits.cast.length +
+                  credits.cast.length +
                   ' names, ';
-                for (let i = 0; i < random_movie_credits.cast.length; i++) {
-                  cast[i] = random_movie_credits.cast[i].name;
+                for (let i = 0; i < credits.cast.length; i++) {
+                  cast[i] = credits.cast[i].name;
                 }
               }
               // if more than 10, note that only the top 10 cast members will be read off
@@ -171,7 +177,7 @@ const StartGameIntent = {
                 speechText +=
                   'There are over 10 cast members for this film. So, out of the top 10 billed names, ';
                 for (let i = 0; i < 10; i++) {
-                  cast[i] = random_movie_credits.cast[i].name;
+                  cast[i] = credits.cast[i].name;
                 }
               }
               speechText +=
@@ -229,7 +235,6 @@ const StartGameIntent = {
             handlerInput.attributesManager.setSessionAttributes({
               type: attributes.type,
             });
-            console.log(error);
             return handlerInput.responseBuilder
               .speak(speechText)
               .reprompt(repromptText)
@@ -248,7 +253,6 @@ const StartGameIntent = {
         handlerInput.attributesManager.setSessionAttributes({
           type: attributes.type,
         });
-        console.log(error);
         return handlerInput.responseBuilder
           .speak(speechText)
           .reprompt(repromptText)
