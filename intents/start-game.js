@@ -67,7 +67,7 @@ export const StartGameIntent = {
             "<break time='1s'/>'. I'll give you a few seconds to think on it. <break time='4s'/>" +
             replyText +
             VOICE_CLOSE;
-          repromptText = "<voice name='" + VOICE_NAME + replyText + VOICE_CLOSE;
+          repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             type: 'answer',
             tagline: tagline,

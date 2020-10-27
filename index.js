@@ -8,7 +8,7 @@ const { UnhandledHandler } = require('./handlers/unhandled');
 // intents
 const { AnswerIntent } = require('./intents/answer');
 const { BuyIntent } = require('./intents/shop/buy');
-const { BuyResponseIntent } = require('./handlers/buy-response');
+const { BuyResponseHandler } = require('./handlers/buy-response');
 const { CancelIntent } = require('./intents/standard/cancel');
 const { Fallback } = require('./intents/standard/fallback');
 const { GameResultsIntent } = require('./intents/game-results');
@@ -38,7 +38,7 @@ exports.handler = skillBuilder
   .addRequestHandlers(
     AnswerIntent,
     BuyIntent,
-    BuyResponseIntent,
+    BuyResponseHandler,
     CancelIntent,
     Fallback,
     GameResultsIntent,

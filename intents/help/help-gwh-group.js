@@ -1,4 +1,4 @@
-import { VOICE_CLOSE, VOICE_NAME, VOICE_OPEN } from '../../consts';
+import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
 import { HELP_GWH_GROUP_INTENT, INTENT_REQUEST } from '../../consts/intents';
 
 export const HelpGWHGroupIntent = {

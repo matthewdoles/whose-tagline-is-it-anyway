@@ -1,6 +1,6 @@
 import { VOICE_OPEN, VOICE_CLOSE } from '../consts';
 
-export const BuyResponseIntent = {
+export const BuyResponseHandler = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
     return input.type === 'Connections.Response' && input.name === 'Buy';
