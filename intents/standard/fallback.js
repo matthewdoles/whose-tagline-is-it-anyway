@@ -11,7 +11,7 @@ export const Fallback = {
   handle(handlerInput) {
     let reponseText =
       VOICE_OPEN +
-      "Sorry, I didn't understand what you said. Please try again" +
+      "Sorry, I didn't understand what you said. Please try again." +
       VOICE_CLOSE;
 
     return handlerInput.responseBuilder
