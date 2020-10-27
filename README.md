@@ -26,6 +26,30 @@ The [WhoseTaglineIntent](./intents/whose-tagline.js) sets the game type to 'whos
 
 The [GoodWordHuntingIntent](./intents/good-word-hunting.js) first checks if the user is entitled to the Good Word Hunting prdocut. If the user is not entitled to the product, they are informed and asked if they would like to hear more about the game. If the user is entitled, they are asked if they would like to play with extended time to answer (20s) or not (4s). Both repsonses will eventually trigger the StartGameIntent.
 
+#### Start Game Intent
+
+#### Movie Cast Intent
+
+#### Hint Intent
+
+#### Repeat Intent
+
+The [RepeatIntent](./intents/repeat.js) is invoked upon user request during a game of either a Whose Tagline Is It Anyway or Good Word Hunting. If the game is Whose Tagline Is It Anyway, the [StartGameIntent](./intents/start-game.js) is repeated and the user is asked if they would like to repeat the tagline, get a hint, or answer. If the game is Good Word Hunting, the keywords are given again and the requested number of cast memebers are given again. After that, the user is given some more time then requested to answer.
+
+#### Answer Intent
+
+The [AnswerIntent](./intents/answer.js) is invoked only when a user request to answer during a game of Whose Tagline Is It Anyway. The intent simply asks the user what movie the tagline is for, saves the user's answer in a guess slot, then triggers the [GameResultsIntent](./intents/game-results.js) to compare the guess with the results.
+
+#### Game Results Intent
+
+The [GameResultsIntent](./intents/game-results.js) is the last intent in the flow of either a Whose Tagline Is It Anyway or Good Word Hunting game. If the game type is Whose Tagline Is It Anyway, the intent will recap the game by giving the tagline one more time, saying the users's guess, and then giving the correct movie. After recapping, the user will be asked if they like to play another round.
+
+If the game type is Good Word Hunting, the intent will recap the game by giving the keyowrds, the number of cast memebers they asked for, their guess, and then finally the correct movie. After that the remaining cast names are given and then the user is asked if they would like to play another round.
+
+#### Get Tagline & Get Movie Cast Intent
+
+The [GetTaglineIntent](./intents/get-tagline.js) and [GetMovieCastIntent](./intents/get-movie-cast.js) allows the user to get the tagline or cast for any provided movie. The intent is invoked when a user says "get the tagline/cast for 'insert movie' from 'insert year'". Only the the movie slot is required - the year slot can be optionally given for occurences where two or more movies share the same title ([Examples](https://screenrant.com/movies-same-name-definitely-not-same-movie/)).
+
 #### Standard Intents
 
 [CancelIntent](./intents/standard/cancel.js): Invoked if the user says 'cancel'. Exits the skill.
