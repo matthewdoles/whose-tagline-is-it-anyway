@@ -28,9 +28,19 @@ The [GoodWordHuntingIntent](./intents/good-word-hunting.js) first checks if the 
 
 #### Start Game Intent
 
+The [StartGameIntent](./intents/start-game.js) is invoked when starting a game of either Whose Tagline Is It Anyway or Good Word Hunting. The first thing the intent will do is check to see if there is a movie in the session attributes (intent may be repeated, thus may already have a movie). If no movie found in session attributes, will make a callout to retrieve a random movie. If the game is Whose Tagline Is It Anyway, the intent will give the random movie's tagline then prompt the user if they would like it repeated, a hint, or to answer.
+
+If the game is Good Word Hunting, the game will start by giving 5 keywords to describe the random movie (movie may have less than 5). After that, the user will be asked how many out of 10 names from lowest billed to highest they think they would need to guess the movie (movie may have less than 10 cast members, logic in place for such conditions). With a number given, the [MovieCastIntent](./intents/movie-cast.js) is invoked for the next phase of the game.
+
 #### Movie Cast Intent
 
+The [MovieCastIntent](./intents/movie-cast.js) is used in the second phase of a Good Word Hunting game. The first thing the intent will check is for a valid number guess, if their response is invalid the user is prompted to give a number. With a valid number, the requested number of names from lowest billed to highest will be given. After that, the user is prompted whether they would like the keywords and cast repeated or to answer.
+
 #### Hint Intent
+
+The [HintIntent](./intents/hint.js) is invoked upon user request during a game of either a Whose Tagline Is It Anyway or Good Word Hunting. If the game is Whose Tagline Is It Anyway, the user is first given the year the movie came out. After that, the user is aked if they would like to repeat the tagline, get one more hint, or answer. If the user request one more hint, they are given the top two billed cast members of the movie. Then once again, they are if they would like the tagline repeated or answer. If the user tries to answer, the intent replies that no more hints can be given and prompt whether they would like the tagline repeated or answer.
+
+If the game is Good Word Hunting, no hints are given. However as a easter egg, if the user asks for a hint three times, the year the movie came out is given. After that, no more hints are given and the user is prompted whether they would like to repeat the keywords and cast or answer.
 
 #### Repeat Intent
 
