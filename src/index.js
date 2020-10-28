@@ -1,6 +1,7 @@
 const Alexa = require('ask-sdk');
 
 // handlers
+const { BuyResponseHandler } = require('./handlers/buy-response');
 const { LaunchRequestHandler } = require('./handlers/launch-request');
 const { RefundResponseHandler } = require('./handlers/refund-response');
 const { UnhandledHandler } = require('./handlers/unhandled');
@@ -8,7 +9,6 @@ const { UnhandledHandler } = require('./handlers/unhandled');
 // intents
 const { AnswerIntent } = require('./intents/answer');
 const { BuyIntent } = require('./intents/shop/buy');
-const { BuyResponseHandler } = require('./handlers/buy-response');
 const { CancelIntent } = require('./intents/standard/cancel');
 const { Fallback } = require('./intents/standard/fallback');
 const { GameResultsIntent } = require('./intents/game-results');
@@ -36,35 +36,35 @@ const { YesIntent } = require('./intents/standard/yes');
 const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
   .addRequestHandlers(
+    LaunchRequestHandler,
+    WhoseTaglineIntent,
+    GoodWordHuntingIntent,
+    StartGameIntent,
+    YesIntent,
+    HelpIntent,
+    RepeatIntent,
+    MovieCastIntent,
+    HintIntent,
     AnswerIntent,
+    GameResultsIntent,
+    GetTaglineIntent,
+    GetMovieCastIntent,
+    StopIntent,
+    CancelIntent,
+    NoIntent,
+    Fallback,
+    ShopIntent,
     BuyIntent,
     BuyResponseHandler,
-    CancelIntent,
-    Fallback,
-    GameResultsIntent,
-    GetMovieCastIntent,
-    GetTaglineIntent,
-    GoodWordHuntingIntent,
-    HelpIntent,
-    HelpGetCastIntent,
-    HelpGetTaglineIntent,
-    HelpGWHIntent,
-    HelpGWHGroupIntent,
-    HelpWhoseTaglineIntent,
-    HintIntent,
-    LaunchRequestHandler,
-    MovieCastIntent,
-    NoIntent,
-    PurchasedIntent,
     RefundIntent,
     RefundResponseHandler,
-    RepeatIntent,
-    ShopIntent,
-    StartGameIntent,
-    StopIntent,
-    UnhandledHandler,
-    WhoseTaglineIntent,
-    YesIntent
+    PurchasedIntent,
+    HelpWhoseTaglineIntent,
+    HelpGWHIntent,
+    HelpGWHGroupIntent,
+    HelpGetTaglineIntent,
+    HelpGetCastIntent,
+    UnhandledHandler
   )
   .withSkillId('amzn1.ask.skill.9b659d16-b8f7-4401-ac19-d4d86a2b59b7')
   .withApiClient(new Alexa.DefaultApiClient())
