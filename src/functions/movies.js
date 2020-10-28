@@ -80,7 +80,7 @@ const getMovieCredits = async (movieId) => {
 };
 
 const searchForMovie = async (movie, year) => {
-  const themoviedb_path =
+  const path =
     '/3/search/movie?api_key=' +
     MOVIEDB_API_KEY +
     '&language=' +
