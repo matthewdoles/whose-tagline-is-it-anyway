@@ -1,6 +1,6 @@
-import { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } from '../consts';
-import { HINT_INTENT, INTENT_REQUEST } from '../consts/intents';
-import { getMovieCredits } from '../functions/movies';
+const { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } = require('../consts');
+const { HINT_INTENT, INTENT_REQUEST } = require('../consts/intents');
+const { getMovieCredits } = require('../functions/movies');
 
 export const HintIntent = {
   canHandle(handlerInput) {

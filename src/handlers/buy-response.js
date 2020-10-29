@@ -1,4 +1,4 @@
-import { VOICE_OPEN, VOICE_CLOSE } from '../consts';
+const { VOICE_OPEN, VOICE_CLOSE } = require('../consts');
 
 export const BuyResponseHandler = {
   canHandle(handlerInput) {

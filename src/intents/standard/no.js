@@ -1,6 +1,6 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
-import { INTENT_REQUEST, NO_INTENT } from '../../consts/intents';
-import { StartGameIntent } from '../start-game';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../../consts');
+const { INTENT_REQUEST, NO_INTENT } = require('../../consts/intents');
+const { StartGameIntent } = require('../start-game');
 
 export const NoIntent = {
   canHandle(handlerInput) {

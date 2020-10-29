@@ -3,18 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MovieCastIntent = undefined;
 
-var _intents = require('../consts/intents');
+var _require = require('../consts/intents'),
+    INTENT_REQUEST = _require.INTENT_REQUEST,
+    MOVIE_CAST_INTENT = _require.MOVIE_CAST_INTENT;
 
-var _require = require('../consts'),
-    VOICE_CLOSE = _require.VOICE_CLOSE,
-    VOICE_OPEN = _require.VOICE_OPEN;
+var _require2 = require('../consts'),
+    VOICE_CLOSE = _require2.VOICE_CLOSE,
+    VOICE_OPEN = _require2.VOICE_OPEN;
 
 var MovieCastIntent = exports.MovieCastIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.MOVIE_CAST_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === MOVIE_CAST_INTENT;
   },
   handle: function handle(handlerInput) {
     var numberNamesNeeded = handlerInput.requestEnvelope.request.intent.slots.numberNamesNeeded.value;

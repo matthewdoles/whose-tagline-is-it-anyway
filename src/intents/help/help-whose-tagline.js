@@ -1,8 +1,8 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
-import {
+const { VOICE_CLOSE, VOICE_OPEN } = require('../../consts');
+const {
   HELP_WHOSE_TAGLINE_INTENT,
   INTENT_REQUEST,
-} from '../../consts/intents';
+} = require('../../consts/intents');
 
 export const HelpWhoseTaglineIntent = {
   canHandle(handlerInput) {

@@ -1,4 +1,4 @@
-import { INTENT_REQUEST, STOP_INTENT } from '../../consts/intents';
+const { INTENT_REQUEST, STOP_INTENT } = require('../../consts/intents');
 
 export const StopIntent = {
   canHandle(handlerInput) {

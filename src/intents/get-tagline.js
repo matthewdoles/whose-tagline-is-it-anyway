@@ -1,6 +1,6 @@
-import { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } from '../consts';
-import { GET_TAGLINE_INTENT, INTENT_REQUEST } from '../consts/intents';
-import { getMovieTagline, searchForMovie } from '../functions/movies';
+const { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } = require('../consts');
+const { GET_TAGLINE_INTENT, INTENT_REQUEST } = require('../consts/intents');
+const { getMovieTagline, searchForMovie } = require('../functions/movies');
 
 export const GetTaglineIntent = {
   canHandle(handlerInput) {

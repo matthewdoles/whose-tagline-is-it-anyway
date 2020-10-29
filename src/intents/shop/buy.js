@@ -1,5 +1,5 @@
-import { PRODUCT_ID } from '../../consts';
-import { BUY_INTENT, INTENT_REQUEST } from '../../consts/intents';
+const { PRODUCT_ID } = require('../../consts');
+const { BUY_INTENT, INTENT_REQUEST } = require('../../consts/intents');
 
 export const BuyIntent = {
   canHandle(handlerInput) {

@@ -1,5 +1,8 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
-import { HELP_GWH_GROUP_INTENT, INTENT_REQUEST } from '../../consts/intents';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../../consts');
+const {
+  HELP_GWH_GROUP_INTENT,
+  INTENT_REQUEST,
+} = require('../../consts/intents');
 
 export const HelpGWHGroupIntent = {
   canHandle(handlerInput) {
@@ -17,7 +20,7 @@ export const HelpGWHGroupIntent = {
           'Good Word Hunting can also be fun to play in a group setting. ' +
           'At the start of the game, everyone will be given the keywords associated ' +
           'with a random movie. Then, you will be given 20 seconds to bid on who can ' +
-          'name the movie with the least amount of names given to them, from lowest ' +
+          'name the movie with the least amount of names given to them, = require( lowest ' +
           'billed to highest. With a successful bidder determined, that person will ' +
           'complete the game. If the bidder gets the answer right, add a point. ' +
           'If they get it wrong, deduct a point. Or, instead of subtracting a point, ' +

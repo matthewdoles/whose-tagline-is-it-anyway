@@ -1,11 +1,11 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
-import { INTENT_REQUEST, YES_INTENT } from '../../consts/intents';
-import { AnswerIntent } from '../answer';
-import { GoodWordHuntingIntent } from '../good-word-hunting';
-import { HelpIntent } from '../help/help';
-import { HelpGWHIntent } from '../help/help-gwh';
-import { StartGameIntent } from '../start-game';
-import { WhoseTaglineIntent } from '../whose-tagline';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../../consts');
+const { INTENT_REQUEST, YES_INTENT } = require('../../consts/intents');
+const { AnswerIntent } = require('../answer');
+const { GoodWordHuntingIntent } = require('../good-word-hunting');
+const { HelpIntent } = require('../help/help');
+const { HelpGWHIntent } = require('../help/help-gwh');
+const { StartGameIntent } = require('../start-game');
+const { WhoseTaglineIntent } = require('../whose-tagline');
 
 export const YesIntent = {
   canHandle(handlerInput) {

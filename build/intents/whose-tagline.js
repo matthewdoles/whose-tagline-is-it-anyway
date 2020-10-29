@@ -3,22 +3,24 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.WhoseTaglineIntent = undefined;
 
-var _intents = require('../consts/intents');
+var _require = require('../consts/intents'),
+    INTENT_REQUEST = _require.INTENT_REQUEST,
+    WHOSE_TAGLINE_INTENT = _require.WHOSE_TAGLINE_INTENT;
 
-var _startGame = require('./start-game');
+var _require2 = require('./start-game'),
+    StartGameIntent = _require2.StartGameIntent;
 
 var WhoseTaglineIntent = exports.WhoseTaglineIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.WHOSE_TAGLINE_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === WHOSE_TAGLINE_INTENT;
   },
   handle: function handle(handlerInput) {
     // set game type to whose tagline, call start game intent
     handlerInput.attributesManager.setSessionAttributes({
       type: 'whoseTagline'
     });
-    return _startGame.StartGameIntent.handle(handlerInput);
+    return StartGameIntent.handle(handlerInput);
   }
 };

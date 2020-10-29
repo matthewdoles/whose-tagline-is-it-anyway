@@ -1,5 +1,5 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
-import { HELP_INTENT, INTENT_REQUEST } from '../../consts/intents';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../../consts');
+const { HELP_INTENT, INTENT_REQUEST } = require('../../consts/intents');
 
 export const HelpIntent = {
   canHandle(handlerInput) {

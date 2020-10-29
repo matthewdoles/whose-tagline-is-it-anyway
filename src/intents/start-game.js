@@ -1,11 +1,11 @@
 const { VOICE_CLOSE, VOICE_OPEN, MOVIEDB_ERROR } = require('../consts');
-import { INTENT_REQUEST, START_GAME_INTENT } from '../consts/intents';
-import {
+const { INTENT_REQUEST, START_GAME_INTENT } = require('../consts/intents');
+const {
   getMovieKeywords,
   getMovieTagline,
   getRandomMovie,
-} from '../functions/movies';
-import { WhoseTaglineIntent } from './whose-tagline';
+} = require('../functions/movies');
+const { WhoseTaglineIntent } = require('./whose-tagline');
 
 export const StartGameIntent = {
   canHandle(handlerInput) {

@@ -1,4 +1,4 @@
-import { PRODUCT_ID, VOICE_CLOSE, VOICE_OPEN } from '../consts';
+const { PRODUCT_ID, VOICE_CLOSE, VOICE_OPEN } = require('../consts');
 
 export const LaunchRequestHandler = {
   canHandle(handlerInput) {

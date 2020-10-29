@@ -1,6 +1,6 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
-import { INTENT_REQUEST, REPEAT_INTENT } from '../consts/intents';
-import { StartGameIntent } from './start-game';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../consts');
+const { INTENT_REQUEST, REPEAT_INTENT } = require('../consts/intents');
+const { StartGameIntent } = require('./start-game');
 
 export const RepeatIntent = {
   canHandle(handlerInput) {
@@ -44,7 +44,7 @@ export const RepeatIntent = {
           speechText +=
             'The ' +
             attributes.numberNamesNeeded +
-            ' names from lowest billed to highest are ';
+            ' names = require( lowest billed to highest are ';
 
           let castIndex = attributes.cast.length - 1;
           for (let i = 1; i <= attributes.numberNamesNeeded; i++) {

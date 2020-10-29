@@ -1,5 +1,5 @@
-import { GOOD_WORD_HUNTING, INTENT_REQUEST } from '../consts/intents';
-import { PRODUCT_ID, VOICE_OPEN, VOICE_CLOSE } from '../consts/';
+const { GOOD_WORD_HUNTING, INTENT_REQUEST } = require('../consts/intents');
+const { PRODUCT_ID, VOICE_OPEN, VOICE_CLOSE } = require('../consts/');
 
 export const GoodWordHuntingIntent = {
   canHandle(handlerInput) {

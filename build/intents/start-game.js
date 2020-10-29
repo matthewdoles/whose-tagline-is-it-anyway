@@ -3,23 +3,28 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.StartGameIntent = undefined;
-
-var _intents = require('../consts/intents');
-
-var _movies = require('../functions/movies');
-
-var _whoseTagline = require('./whose-tagline');
 
 var _require = require('../consts'),
     VOICE_CLOSE = _require.VOICE_CLOSE,
     VOICE_OPEN = _require.VOICE_OPEN,
     MOVIEDB_ERROR = _require.MOVIEDB_ERROR;
 
+var _require2 = require('../consts/intents'),
+    INTENT_REQUEST = _require2.INTENT_REQUEST,
+    START_GAME_INTENT = _require2.START_GAME_INTENT;
+
+var _require3 = require('../functions/movies'),
+    getMovieKeywords = _require3.getMovieKeywords,
+    getMovieTagline = _require3.getMovieTagline,
+    getRandomMovie = _require3.getRandomMovie;
+
+var _require4 = require('./whose-tagline'),
+    WhoseTaglineIntent = _require4.WhoseTaglineIntent;
+
 var StartGameIntent = exports.StartGameIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.name === _intents.START_GAME_INTENT;
+    return input.type === INTENT_REQUEST && input.name === START_GAME_INTENT;
   },
   handle: async function handle(handlerInput) {
     var attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -36,7 +41,7 @@ var StartGameIntent = exports.StartGameIntent = {
     // get a random popular movie if this intent is not being repeated
     if (attributes.movieId == undefined) {
       try {
-        var randomMovie = await (0, _movies.getRandomMovie)();
+        var randomMovie = await getRandomMovie();
         if (randomMovie.results.length > 0) {
           // save variables for random movie
           var randomIndex = Math.floor(Math.random() * randomMovie.results.length);
@@ -58,7 +63,7 @@ var StartGameIntent = exports.StartGameIntent = {
     // if game is whose tagline, make api call for tagline
     if (attributes.type == 'whoseTagline') {
       try {
-        var result = await (0, _movies.getMovieTagline)(movieId);
+        var result = await getMovieTagline(movieId);
         var tagline = result.tagline;
         //if tagline is not blank, continue with game
         if (tagline) {
@@ -78,7 +83,7 @@ var StartGameIntent = exports.StartGameIntent = {
         }
         //if tagline is blank, recall intent to get another random movie
         else {
-            return _whoseTagline.WhoseTaglineIntent.handle(handlerInput);
+            return WhoseTaglineIntent.handle(handlerInput);
           }
       } catch (error) {
         speechText = VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
@@ -92,7 +97,7 @@ var StartGameIntent = exports.StartGameIntent = {
           speechText += "Okay, you will have 20 seconds for bidding on names. Let's begin. ";
         }
         try {
-          var random_movie_keywords = await (0, _movies.getMovieKeywords)(movieId);
+          var random_movie_keywords = await getMovieKeywords(movieId);
           var keywords = [];
           if (random_movie_keywords.keywords.length != 0) {
             // if less than 5 words available to describe movie, list them all

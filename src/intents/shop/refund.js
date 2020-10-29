@@ -1,5 +1,5 @@
-import { INTENT_REQUEST, REFUND_INTENT } from '../../consts/intents';
-import { PRODUCT_ID } from '../../consts';
+const { INTENT_REQUEST, REFUND_INTENT } = require('../../consts/intents');
+const { PRODUCT_ID } = require('../../consts');
 
 export const RefundIntent = {
   canHandle(handlerInput) {

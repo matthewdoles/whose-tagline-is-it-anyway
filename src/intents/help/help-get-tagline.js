@@ -1,5 +1,8 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../../consts';
-import { HELP_GET_TAGLINE_INTENT, INTENT_REQUEST } from '../../consts/intents';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../../consts');
+const {
+  HELP_GET_TAGLINE_INTENT,
+  INTENT_REQUEST,
+} = require('../../consts/intents');
 
 export const HelpGetTaglineIntent = {
   canHandle(handlerInput) {
@@ -19,7 +22,7 @@ export const HelpGetTaglineIntent = {
           "Or, you can say 'what is the tagline for insert movie'. " +
           'If you are having trouble getting the tagline for the right movie, ' +
           'try appending the year the movie came out after the movie title. ' +
-          "So, you would say 'what is the tagline for insert movie from insert year movie came out'. " +
+          "So, you would say 'what is the tagline for insert movie = require( insert year movie came out'. " +
           'This skill can not be used during a game. ' +
           'If it is, your current round progress will be lost. ' +
           'If you would like to hear this information again, ' +

@@ -3,16 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BuyIntent = undefined;
 
-var _consts = require('../../consts');
+var _require = require('../../consts'),
+    PRODUCT_ID = _require.PRODUCT_ID;
 
-var _intents = require('../../consts/intents');
+var _require2 = require('../../consts/intents'),
+    BUY_INTENT = _require2.BUY_INTENT,
+    INTENT_REQUEST = _require2.INTENT_REQUEST;
 
 var BuyIntent = exports.BuyIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.BUY_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === BUY_INTENT;
   },
   handle: function handle(handlerInput) {
     return handlerInput.responseBuilder.addDirective({
@@ -20,7 +22,7 @@ var BuyIntent = exports.BuyIntent = {
       name: 'Buy',
       payload: {
         InSkillProduct: {
-          productId: _consts.PRODUCT_ID
+          productId: PRODUCT_ID
         }
       },
       token: 'correlationToken'

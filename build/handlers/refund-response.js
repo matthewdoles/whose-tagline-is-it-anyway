@@ -3,9 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RefundResponseHandler = undefined;
 
-var _consts = require('../consts');
+var _require = require('../consts'),
+    VOICE_CLOSE = _require.VOICE_CLOSE,
+    VOICE_OPEN = _require.VOICE_OPEN;
 
 var RefundResponseHandler = exports.RefundResponseHandler = {
   canHandle: function canHandle(handlerInput) {
@@ -19,8 +20,8 @@ var RefundResponseHandler = exports.RefundResponseHandler = {
     return ms.getInSkillProducts(locale).then(function handleCancelResponse() {
       if (handlerInput.requestEnvelope.request.status.code === '200') {
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'ACCEPTED') {
-          var speechText = _consts.VOICE_OPEN + 'Your request to refund Good Word Hunting has been processed. ' + 'Would you like to resume playing Whose Tagline Is It Anyway instead?' + _consts.VOICE_CLOSE;
-          var repromptText = _consts.VOICE_OPEN + 'Would you like to play a game of Whose Tagline Is It Anyway?' + _consts.VOICE_CLOSE;
+          var speechText = VOICE_OPEN + 'Your request to refund Good Word Hunting has been processed. ' + 'Would you like to resume playing Whose Tagline Is It Anyway instead?' + VOICE_CLOSE;
+          var repromptText = VOICE_OPEN + 'Would you like to play a game of Whose Tagline Is It Anyway?' + VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             type: 'whoseTagline'
           });
@@ -28,8 +29,8 @@ var RefundResponseHandler = exports.RefundResponseHandler = {
         }
 
         if (handlerInput.requestEnvelope.request.payload.purchaseResult === 'NOT_ENTITLED') {
-          var _speechText = _consts.VOICE_OPEN + "Sorry, you don't seem to have any purchases available for a refund. " + 'This skill has one game available for purchase called Good Word Hunting. ' + 'Would you like to hear about it?' + _consts.VOICE_CLOSE;
-          var _repromptText = _consts.VOICE_OPEN + 'Would you like to hear about Good Word Hunting?' + _consts.VOICE_CLOSE;
+          var _speechText = VOICE_OPEN + "Sorry, you don't seem to have any purchases available for a refund. " + 'This skill has one game available for purchase called Good Word Hunting. ' + 'Would you like to hear about it?' + VOICE_CLOSE;
+          var _repromptText = VOICE_OPEN + 'Would you like to hear about Good Word Hunting?' + VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             type: 'goodWordHuntingHelp'
           });
@@ -37,7 +38,7 @@ var RefundResponseHandler = exports.RefundResponseHandler = {
         }
       }
 
-      return handlerInput.responseBuilder.speak(_consts.VOICE_OPEN + 'There was an error handling your purchase request. ' + 'Please try again or contact us for help.' + _consts.VOICE_CLOSE).getResponse();
+      return handlerInput.responseBuilder.speak(VOICE_OPEN + 'There was an error handling your purchase request. ' + 'Please try again or contact us for help.' + VOICE_CLOSE).getResponse();
     });
   }
 };

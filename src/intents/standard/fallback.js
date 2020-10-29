@@ -1,5 +1,5 @@
-import { VOICE_OPEN, VOICE_CLOSE } from '../../consts';
-import { FALLBACK_INTENT, INTENT_REQUEST } from '../../consts/intents';
+const { VOICE_OPEN, VOICE_CLOSE } = require('../../consts');
+const { FALLBACK_INTENT, INTENT_REQUEST } = require('../../consts/intents');
 
 export const Fallback = {
   canHandle(handlerInput) {

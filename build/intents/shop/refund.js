@@ -3,16 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RefundIntent = undefined;
 
-var _intents = require('../../consts/intents');
+var _require = require('../../consts/intents'),
+    INTENT_REQUEST = _require.INTENT_REQUEST,
+    REFUND_INTENT = _require.REFUND_INTENT;
 
-var _consts = require('../../consts');
+var _require2 = require('../../consts'),
+    PRODUCT_ID = _require2.PRODUCT_ID;
 
 var RefundIntent = exports.RefundIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.REFUND_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === REFUND_INTENT;
   },
   handle: function handle(handlerInput) {
     return handlerInput.responseBuilder.addDirective({
@@ -20,7 +22,7 @@ var RefundIntent = exports.RefundIntent = {
       name: 'Cancel',
       payload: {
         InSkillProduct: {
-          productId: _consts.PRODUCT_ID
+          productId: PRODUCT_ID
         }
       },
       token: 'correlationToken'

@@ -3,52 +3,61 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.YesIntent = undefined;
 
-var _consts = require('../../consts');
+var _require = require('../../consts'),
+    VOICE_CLOSE = _require.VOICE_CLOSE,
+    VOICE_OPEN = _require.VOICE_OPEN;
 
-var _intents = require('../../consts/intents');
+var _require2 = require('../../consts/intents'),
+    INTENT_REQUEST = _require2.INTENT_REQUEST,
+    YES_INTENT = _require2.YES_INTENT;
 
-var _answer = require('../answer');
+var _require3 = require('../answer'),
+    AnswerIntent = _require3.AnswerIntent;
 
-var _goodWordHunting = require('../good-word-hunting');
+var _require4 = require('../good-word-hunting'),
+    GoodWordHuntingIntent = _require4.GoodWordHuntingIntent;
 
-var _help = require('../help/help');
+var _require5 = require('../help/help'),
+    HelpIntent = _require5.HelpIntent;
 
-var _helpGwh = require('../help/help-gwh');
+var _require6 = require('../help/help-gwh'),
+    HelpGWHIntent = _require6.HelpGWHIntent;
 
-var _startGame = require('../start-game');
+var _require7 = require('../start-game'),
+    StartGameIntent = _require7.StartGameIntent;
 
-var _whoseTagline = require('../whose-tagline');
+var _require8 = require('../whose-tagline'),
+    WhoseTaglineIntent = _require8.WhoseTaglineIntent;
 
 var YesIntent = exports.YesIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.YES_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === YES_INTENT;
   },
   handle: async function handle(handlerInput) {
     var attributes = handlerInput.attributesManager.getSessionAttributes();
     var speechText = '';
-    var unknownResponse = _consts.VOICE_OPEN + 'Sorry, I am not sure what you are saying yes for. Would you like some help?' + _consts.VOICE_CLOSE;
+    var unknownResponse = VOICE_OPEN + 'Sorry, I am not sure what you are saying yes for. Would you like some help?' + VOICE_CLOSE;
 
     if (attributes.type) {
       switch (attributes.type) {
         case 'whoseTagline':
-          return _whoseTagline.WhoseTaglineIntent.handle(handlerInput);
+          return WhoseTaglineIntent.handle(handlerInput);
         case 'goodWordHunting':
-          return _goodWordHunting.GoodWordHuntingIntent.handle(handlerInput);
+          return GoodWordHuntingIntent.handle(handlerInput);
         case 'goodWordHuntingStart':
           await handlerInput.attributesManager.setSessionAttributes({
             type: 'goodWordHunting',
             time: '20s'
           });
-          return _startGame.StartGameIntent.handle(handlerInput);
+          return StartGameIntent.handle(handlerInput);
         case 'goodWordHuntingHelp':
-          return _helpGwh.HelpGWHIntent.handle(handlerInput);
+          return HelpGWHIntent.handle(handlerInput);
         case 'answer':
-          return _answer.AnswerIntent.handle(handlerInput);
+          return AnswerIntent.handle(handlerInput);
         case 'help':
-          return _help.HelpIntent.handle(handlerInput);
+          return HelpIntent.handle(handlerInput);
         default:
           speechText = unknownResponse;
           handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
@@ -58,6 +67,6 @@ var YesIntent = exports.YesIntent = {
       handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
     }
 
-    return handlerInput.responseBuilder.speak(speechText).reprompt(_consts.VOICE_OPEN + 'Would you like some help?' + _consts.VOICE_CLOSE).getResponse();
+    return handlerInput.responseBuilder.speak(speechText).reprompt(VOICE_OPEN + 'Would you like some help?' + VOICE_CLOSE).getResponse();
   }
 };

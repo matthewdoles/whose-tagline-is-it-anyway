@@ -1,5 +1,4 @@
-import { INTENT_REQUEST, MOVIE_CAST_INTENT } from '../consts/intents';
-
+const { INTENT_REQUEST, MOVIE_CAST_INTENT } = require('../consts/intents');
 const { VOICE_CLOSE, VOICE_OPEN } = require('../consts');
 
 export const MovieCastIntent = {

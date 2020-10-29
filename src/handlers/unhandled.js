@@ -1,4 +1,4 @@
-import { VOICE_CLOSE, VOICE_OPEN } from '../consts';
+const { VOICE_CLOSE, VOICE_OPEN } = require('../consts');
 
 export const UnhandledHandler = {
   canHandle() {

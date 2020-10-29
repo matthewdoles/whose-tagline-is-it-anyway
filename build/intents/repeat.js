@@ -3,18 +3,22 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.RepeatIntent = undefined;
 
-var _consts = require('../consts');
+var _require = require('../consts'),
+    VOICE_CLOSE = _require.VOICE_CLOSE,
+    VOICE_OPEN = _require.VOICE_OPEN;
 
-var _intents = require('../consts/intents');
+var _require2 = require('../consts/intents'),
+    INTENT_REQUEST = _require2.INTENT_REQUEST,
+    REPEAT_INTENT = _require2.REPEAT_INTENT;
 
-var _startGame = require('./start-game');
+var _require3 = require('./start-game'),
+    StartGameIntent = _require3.StartGameIntent;
 
 var RepeatIntent = exports.RepeatIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.REPEAT_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === REPEAT_INTENT;
   },
   handle: function handle(handlerInput) {
     var attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -32,10 +36,10 @@ var RepeatIntent = exports.RepeatIntent = {
             movie: attributes.movie,
             year: attributes.year
           });
-          return _startGame.StartGameIntent.handle(handlerInput);
+          return StartGameIntent.handle(handlerInput);
         // if repeat for good word hunting, give keywords and appropriate names within repeat intent, do not re-call MovieCastIntent
         case 'goodWordHunting':
-          var _speechText = _consts.VOICE_OPEN + 'The ' + attributes.keywords.length + " keywords used to describe this film are <break time='1s'/>";
+          var _speechText = VOICE_OPEN + 'The ' + attributes.keywords.length + " keywords used to describe this film are <break time='1s'/>";
 
           for (var i = 0; i < 5; i++) {
             if (i == 4) {
@@ -45,7 +49,7 @@ var RepeatIntent = exports.RepeatIntent = {
             }
           }
 
-          _speechText += 'The ' + attributes.numberNamesNeeded + ' names from lowest billed to highest are ';
+          _speechText += 'The ' + attributes.numberNamesNeeded + ' names = require( lowest billed to highest are ';
 
           var castIndex = attributes.cast.length - 1;
           for (var _i = 1; _i <= attributes.numberNamesNeeded; _i++) {
@@ -57,7 +61,7 @@ var RepeatIntent = exports.RepeatIntent = {
             castIndex--;
           }
 
-          _speechText += "With that, I'll give you a few more seconds to think of your answer. <break time='4s'/>" + 'Alright, what movie are these keywords and cast members associated with?' + _consts.VOICE_CLOSE;
+          _speechText += "With that, I'll give you a few more seconds to think of your answer. <break time='4s'/>" + 'Alright, what movie are these keywords and cast members associated with?' + VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({
             cast: attributes.cast,
             movieId: attributes.movieId,
@@ -83,15 +87,15 @@ var RepeatIntent = exports.RepeatIntent = {
                 }
               }
             }
-          }).speak(_speechText).reprompt(_consts.VOICE_OPEN + 'What movie is it?' + _consts.VOICE_CLOSE).getResponse();
+          }).speak(_speechText).reprompt(VOICE_OPEN + 'What movie is it?' + VOICE_CLOSE).getResponse();
         default:
-          _speechText = _consts.VOICE_OPEN + 'Sorry, I am not sure what you are wanting me to repeat. ' + 'Would you like some help?' + _consts.VOICE_CLOSE;
+          _speechText = VOICE_OPEN + 'Sorry, I am not sure what you are wanting me to repeat. ' + 'Would you like some help?' + VOICE_CLOSE;
           handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
       }
     } else {
-      speechText = _consts.VOICE_OPEN + 'Sorry, I am not sure what you are wanting me to repeat. ' + 'Would you like some help?' + _consts.VOICE_CLOSE;
+      speechText = VOICE_OPEN + 'Sorry, I am not sure what you are wanting me to repeat. ' + 'Would you like some help?' + VOICE_CLOSE;
       handlerInput.attributesManager.setSessionAttributes({ type: 'help' });
     }
-    return handlerInput.responseBuilder.speak(speechText).reprompt(_consts.VOICE_OPEN + 'Would you like some help?' + _consts.VOICE_CLOSE).getResponse();
+    return handlerInput.responseBuilder.speak(speechText).reprompt(VOICE_OPEN + 'Would you like some help?' + VOICE_CLOSE).getResponse();
   }
 };

@@ -3,16 +3,19 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AnswerIntent = undefined;
 
-var _consts = require('../consts');
+var _require = require('../consts'),
+    VOICE_OPEN = _require.VOICE_OPEN,
+    VOICE_CLOSE = _require.VOICE_CLOSE;
 
-var _intents = require('../consts/intents');
+var _require2 = require('../consts/intents'),
+    ANSWER_INTENT = _require2.ANSWER_INTENT,
+    INTENT_REQUEST = _require2.INTENT_REQUEST;
 
 var AnswerIntent = exports.AnswerIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.ANSWER_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === ANSWER_INTENT;
   },
   handle: function handle(handlerInput) {
     // answer intent for whose tagline game only
@@ -31,6 +34,6 @@ var AnswerIntent = exports.AnswerIntent = {
           }
         }
       }
-    }).speak(_consts.VOICE_OPEN + 'Alright, what movie is this the tagline for?' + _consts.VOICE_CLOSE).reprompt(_consts.VOICE_OPEN + 'Any guess is better than nothing.' + _consts.VOICE_CLOSE).getResponse();
+    }).speak(VOICE_OPEN + 'Alright, what movie is this the tagline for?' + VOICE_CLOSE).reprompt(VOICE_OPEN + 'Any guess is better than nothing.' + VOICE_CLOSE).getResponse();
   }
 };

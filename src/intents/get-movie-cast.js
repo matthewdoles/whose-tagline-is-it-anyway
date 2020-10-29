@@ -1,6 +1,6 @@
-import { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } from '../consts';
-import { GET_MOVIE_CAST_INTENT, INTENT_REQUEST } from '../consts/intents';
-import { getMovieCredits, searchForMovie } from '../functions/movies';
+const { MOVIEDB_ERROR, VOICE_CLOSE, VOICE_OPEN } = require('../consts');
+const { GET_MOVIE_CAST_INTENT, INTENT_REQUEST } = require('../consts/intents');
+const { getMovieCredits, searchForMovie } = require('../functions/movies');
 
 export const GetMovieCastIntent = {
   canHandle(handlerInput) {

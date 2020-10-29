@@ -3,14 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CancelIntent = undefined;
 
-var _intents = require('../../consts/intents');
+var _require = require('../../consts/intents'),
+    CANCEL_INTENT = _require.CANCEL_INTENT,
+    INTENT_REQUEST = _require.INTENT_REQUEST;
 
 var CancelIntent = exports.CancelIntent = {
   canHandle: function canHandle(handlerInput) {
     var input = handlerInput.requestEnvelope.request;
-    return input.type === _intents.INTENT_REQUEST && input.intent.name === _intents.CANCEL_INTENT;
+    return input.type === INTENT_REQUEST && input.intent.name === CANCEL_INTENT;
   },
   handle: function handle(handlerInput) {
     // cancel intent, exit skill

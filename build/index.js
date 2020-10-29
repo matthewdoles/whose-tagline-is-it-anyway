@@ -1,134 +1,98 @@
 'use strict';
 
-var _askSdk = require('ask-sdk');
+var Alexa = require('ask-sdk');
 
-var Alexa = _interopRequireWildcard(_askSdk);
+// handlers
 
-var _buyResponse = require('./handlers/buy-response');
+var _require = require('./handlers/buy-response'),
+    BuyResponseHandler = _require.BuyResponseHandler;
 
-var _buyResponse2 = _interopRequireDefault(_buyResponse);
+var _require2 = require('./handlers/launch-request'),
+    LaunchRequestHandler = _require2.LaunchRequestHandler;
 
-var _launchRequest = require('./handlers/launch-request');
+var _require3 = require('./handlers/refund-response'),
+    RefundResponseHandler = _require3.RefundResponseHandler;
 
-var _launchRequest2 = _interopRequireDefault(_launchRequest);
-
-var _refundResponse = require('./handlers/refund-response');
-
-var _refundResponse2 = _interopRequireDefault(_refundResponse);
-
-var _unhandled = require('./handlers/unhandled');
-
-var _unhandled2 = _interopRequireDefault(_unhandled);
-
-var _answer = require('./intents/answer');
-
-var _answer2 = _interopRequireDefault(_answer);
-
-var _buy = require('./intents/shop/buy');
-
-var _buy2 = _interopRequireDefault(_buy);
-
-var _cancel = require('./intents/standard/cancel');
-
-var _cancel2 = _interopRequireDefault(_cancel);
-
-var _fallback = require('./intents/standard/fallback');
-
-var _fallback2 = _interopRequireDefault(_fallback);
-
-var _gameResults = require('./intents/game-results');
-
-var _gameResults2 = _interopRequireDefault(_gameResults);
-
-var _getMovieCast = require('./intents/get-movie-cast');
-
-var _getMovieCast2 = _interopRequireDefault(_getMovieCast);
-
-var _getTagline = require('./intents/get-tagline');
-
-var _getTagline2 = _interopRequireDefault(_getTagline);
-
-var _goodWordHunting = require('./intents/good-word-hunting');
-
-var _goodWordHunting2 = _interopRequireDefault(_goodWordHunting);
-
-var _help = require('./intents/help/help');
-
-var _help2 = _interopRequireDefault(_help);
-
-var _helpGetCast = require('./intents/help/help-get-cast');
-
-var _helpGetCast2 = _interopRequireDefault(_helpGetCast);
-
-var _helpGetTagline = require('./intents/help/help-get-tagline');
-
-var _helpGetTagline2 = _interopRequireDefault(_helpGetTagline);
-
-var _helpGwh = require('./intents/help/help-gwh');
-
-var _helpGwh2 = _interopRequireDefault(_helpGwh);
-
-var _helpGwhGroup = require('./intents/help/help-gwh-group');
-
-var _helpGwhGroup2 = _interopRequireDefault(_helpGwhGroup);
-
-var _helpWhoseTagline = require('./intents/help/help-whose-tagline');
-
-var _helpWhoseTagline2 = _interopRequireDefault(_helpWhoseTagline);
-
-var _hint = require('./intents/hint');
-
-var _hint2 = _interopRequireDefault(_hint);
-
-var _movieCast = require('./intents/movie-cast');
-
-var _movieCast2 = _interopRequireDefault(_movieCast);
-
-var _no = require('./intents/standard/no');
-
-var _no2 = _interopRequireDefault(_no);
-
-var _purchased = require('./intents/shop/purchased');
-
-var _purchased2 = _interopRequireDefault(_purchased);
-
-var _refund = require('./intents/shop/refund');
-
-var _refund2 = _interopRequireDefault(_refund);
-
-var _repeat = require('./intents/repeat');
-
-var _repeat2 = _interopRequireDefault(_repeat);
-
-var _shop = require('./intents/shop/shop');
-
-var _shop2 = _interopRequireDefault(_shop);
-
-var _startGame = require('./intents/start-game');
-
-var _startGame2 = _interopRequireDefault(_startGame);
-
-var _stop = require('./intents/standard/stop');
-
-var _stop2 = _interopRequireDefault(_stop);
-
-var _whoseTagline = require('./intents/whose-tagline');
-
-var _whoseTagline2 = _interopRequireDefault(_whoseTagline);
-
-var _yes = require('./intents/standard/yes');
-
-var _yes2 = _interopRequireDefault(_yes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var skillBuilder = Alexa.SkillBuilders.custom();
+var _require4 = require('./handlers/unhandled'),
+    UnhandledHandler = _require4.UnhandledHandler;
 
 // intents
 
 
-// handlers
+var _require5 = require('./intents/answer'),
+    AnswerIntent = _require5.AnswerIntent;
 
-exports.handler = skillBuilder.addRequestHandlers(_launchRequest2.default, _whoseTagline2.default, _goodWordHunting2.default, _startGame2.default, _yes2.default, _help2.default, _repeat2.default, _movieCast2.default, _hint2.default, _answer2.default, _gameResults2.default, _getTagline2.default, _getMovieCast2.default, _stop2.default, _cancel2.default, _no2.default, _fallback2.default, _shop2.default, _buy2.default, _buyResponse2.default, _refund2.default, _refundResponse2.default, _purchased2.default, _helpWhoseTagline2.default, _helpGwh2.default, _helpGwhGroup2.default, _helpGetTagline2.default, _helpGetCast2.default, _unhandled2.default).withSkillId('amzn1.ask.skill.9b659d16-b8f7-4401-ac19-d4d86a2b59b7').withApiClient(new Alexa.DefaultApiClient()).addErrorHandlers(_unhandled2.default).lambda();
+var _require6 = require('./intents/shop/buy'),
+    BuyIntent = _require6.BuyIntent;
+
+var _require7 = require('./intents/standard/cancel'),
+    CancelIntent = _require7.CancelIntent;
+
+var _require8 = require('./intents/standard/fallback'),
+    Fallback = _require8.Fallback;
+
+var _require9 = require('./intents/game-results'),
+    GameResultsIntent = _require9.GameResultsIntent;
+
+var _require10 = require('./intents/get-movie-cast'),
+    GetMovieCastIntent = _require10.GetMovieCastIntent;
+
+var _require11 = require('./intents/get-tagline'),
+    GetTaglineIntent = _require11.GetTaglineIntent;
+
+var _require12 = require('./intents/good-word-hunting'),
+    GoodWordHuntingIntent = _require12.GoodWordHuntingIntent;
+
+var _require13 = require('./intents/help/help'),
+    HelpIntent = _require13.HelpIntent;
+
+var _require14 = require('./intents/help/help-get-cast'),
+    HelpGetCastIntent = _require14.HelpGetCastIntent;
+
+var _require15 = require('./intents/help/help-get-tagline'),
+    HelpGetTaglineIntent = _require15.HelpGetTaglineIntent;
+
+var _require16 = require('./intents/help/help-gwh'),
+    HelpGWHIntent = _require16.HelpGWHIntent;
+
+var _require17 = require('./intents/help/help-gwh-group'),
+    HelpGWHGroupIntent = _require17.HelpGWHGroupIntent;
+
+var _require18 = require('./intents/help/help-whose-tagline'),
+    HelpWhoseTaglineIntent = _require18.HelpWhoseTaglineIntent;
+
+var _require19 = require('./intents/hint'),
+    HintIntent = _require19.HintIntent;
+
+var _require20 = require('./intents/movie-cast'),
+    MovieCastIntent = _require20.MovieCastIntent;
+
+var _require21 = require('./intents/standard/no'),
+    NoIntent = _require21.NoIntent;
+
+var _require22 = require('./intents/shop/purchased'),
+    PurchasedIntent = _require22.PurchasedIntent;
+
+var _require23 = require('./intents/shop/refund'),
+    RefundIntent = _require23.RefundIntent;
+
+var _require24 = require('./intents/repeat'),
+    RepeatIntent = _require24.RepeatIntent;
+
+var _require25 = require('./intents/shop/shop'),
+    ShopIntent = _require25.ShopIntent;
+
+var _require26 = require('./intents/start-game'),
+    StartGameIntent = _require26.StartGameIntent;
+
+var _require27 = require('./intents/standard/stop'),
+    StopIntent = _require27.StopIntent;
+
+var _require28 = require('./intents/whose-tagline'),
+    WhoseTaglineIntent = _require28.WhoseTaglineIntent;
+
+var _require29 = require('./intents/standard/yes'),
+    YesIntent = _require29.YesIntent;
+
+var skillBuilder = Alexa.SkillBuilders.custom();
+exports.handler = skillBuilder.addRequestHandlers(LaunchRequestHandler, WhoseTaglineIntent, GoodWordHuntingIntent, StartGameIntent, YesIntent, HelpIntent, RepeatIntent, MovieCastIntent, HintIntent, AnswerIntent, GameResultsIntent, GetTaglineIntent, GetMovieCastIntent, StopIntent, CancelIntent, NoIntent, Fallback, ShopIntent, BuyIntent, BuyResponseHandler, RefundIntent, RefundResponseHandler, PurchasedIntent, HelpWhoseTaglineIntent, HelpGWHIntent, HelpGWHGroupIntent, HelpGetTaglineIntent, HelpGetCastIntent, UnhandledHandler).withSkillId('amzn1.ask.skill.9b659d16-b8f7-4401-ac19-d4d86a2b59b7').withApiClient(new Alexa.DefaultApiClient()).addErrorHandlers(UnhandledHandler).lambda();
