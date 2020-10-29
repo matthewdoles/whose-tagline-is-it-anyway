@@ -1,5 +1,9 @@
 # whose-tagline-is-it-anyway
 
+[![Build Status](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway.svg?branch=master)](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway)
+
+<img src="https://images-na.ssl-images-amazon.com/images/I/61rJ1AiwT+L.png" alt="SkillLogo" width="250"/>
+
 Alexa Skill Store Page: [Whose Tagline Is It Anyway](https://www.amazon.com/Whose-Tagline-Is-It-Anyway/dp/B07SW6MZLZ)
 
 Invocation: whose tagline is it anyway
