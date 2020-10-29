@@ -1,6 +1,4 @@
 const Alexa = require('ask-sdk');
-let voice_name = 'Matthew';
-const productId = process.env.GOOD_WORD_HUNTING_PRODUCT_ID;
 
 const { BuyResponseHandler } = require('./handlers/buy-response');
 const { LaunchRequestHandler } = require('./handlers/launch-request');

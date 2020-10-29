@@ -1,8 +1,6 @@
 'use strict';
 
 var Alexa = require('ask-sdk');
-var voice_name = 'Matthew';
-var productId = process.env.GOOD_WORD_HUNTING_PRODUCT_ID;
 
 var _require = require('./handlers/buy-response'),
     BuyResponseHandler = _require.BuyResponseHandler;

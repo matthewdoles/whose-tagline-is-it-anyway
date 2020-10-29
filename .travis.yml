@@ -6,4 +6,5 @@ node_js:
 install:
   - npm install
 
-script: 'true'
+after_success:
+  - npm run coveralls
