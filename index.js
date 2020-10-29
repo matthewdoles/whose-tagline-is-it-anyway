@@ -1,4 +1,39 @@
 const Alexa = require('ask-sdk');
+
+// handlers
+const { BuyResponseHandler } = require('./handlers/buy-response');
+const { LaunchRequestHandler } = require('./handlers/launch-request');
+const { RefundResponseHandler } = require('./handlers/refund-response');
+const { UnhandledHandler } = require('./handlers/unhandled');
+
+// intents
+const { AnswerIntent } = require('./intents/answer');
+const { BuyIntent } = require('./intents/shop/buy');
+const { CancelIntent } = require('./intents/standard/cancel');
+const { Fallback } = require('./intents/standard/fallback');
+const { GameResultsIntent } = require('./intents/game-results');
+const { GetMovieCastIntent } = require('./intents/get-movie-cast');
+const { GetTaglineIntent } = require('./intents/get-tagline');
+const { GoodWordHuntingIntent } = require('./intents/good-word-hunting');
+const { HelpIntent } = require('./intents/help/help');
+const { HelpGetCastIntent } = require('./intents/help/help-get-cast');
+const { HelpGetTaglineIntent } = require('./intents/help/help-get-tagline');
+const { HelpGWHIntent } = require('./intents/help/help-gwh');
+const { HelpGWHGroupIntent } = require('./intents/help/help-gwh-group');
+const { HelpWhoseTaglineIntent } = require('./intents/help/help-whose-tagline');
+const { HintIntent } = require('./intents/hint');
+const { MovieCastIntent } = require('./intents/movie-cast');
+const { NoIntent } = require('./intents/standard/no');
+const { PurchasedIntent } = require('./intents/shop/purchased');
+const { RefundIntent } = require('./intents/shop/refund');
+const { RepeatIntent } = require('./intents/repeat');
+const { ShopIntent } = require('./intents/shop/shop');
+const { StartGameIntent } = require('./intents/start-game');
+const { StopIntent } = require('./intents/standard/stop');
+const { WhoseTaglineIntent } = require('./intents/whose-tagline');
+const { YesIntent } = require('./intents/standard/yes');
+
+const Alexa = require('ask-sdk');
 let voice_name = "Matthew";
 const productId = process.env.GOOD_WORD_HUNTING_PRODUCT_ID;
 const MovieFunctions = require('./moviefunctions');
