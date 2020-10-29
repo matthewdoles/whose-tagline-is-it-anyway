@@ -4,13 +4,16 @@ const {
   getMovieKeywords,
   getMovieTagline,
   getRandomMovie,
+  getMovieCredits,
 } = require('../functions/movies');
 const { WhoseTaglineIntent } = require('./whose-tagline');
 
 export const StartGameIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
-    return input.type === INTENT_REQUEST && input.name === START_GAME_INTENT;
+    return (
+      input.type === INTENT_REQUEST && input.intent.name === START_GAME_INTENT
+    );
   },
   async handle(handlerInput) {
     const attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -25,7 +28,7 @@ export const StartGameIntent = {
     }
 
     // get a random popular movie if this intent is not being repeated
-    if (attributes.movieId == undefined) {
+    if (attributes.movieId === undefined) {
       try {
         const randomMovie = await getRandomMovie();
         if (randomMovie.results.length > 0) {
@@ -38,6 +41,7 @@ export const StartGameIntent = {
           year = randomMovie.results[randomIndex].release_date;
         }
       } catch (error) {
+        console.log(error);
         const replyText = 'Would you like to try again?';
         speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
         repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
@@ -52,7 +56,7 @@ export const StartGameIntent = {
     }
 
     // if game is whose tagline, make api call for tagline
-    if (attributes.type == 'whoseTagline') {
+    if (attributes.type === 'whoseTagline') {
       try {
         const result = await getMovieTagline(movieId);
         const tagline = result.tagline;
@@ -62,9 +66,9 @@ export const StartGameIntent = {
             'Okay, what would you like to do? Repeat the tagline, get a hint, or answer.';
           speechText =
             VOICE_OPEN +
-            "Alright, the tagline for this movie is, '<break time='1s'/>" +
+            "Alright, the tagline for this movie is, <break time='1s'/>" +
             tagline +
-            "<break time='1s'/>'. I'll give you a few seconds to think on it. <break time='4s'/>" +
+            "<break time='1s'/>. I'll give you a few seconds to think on it. <break time='4s'/>" +
             replyText +
             VOICE_CLOSE;
           repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
@@ -92,10 +96,10 @@ export const StartGameIntent = {
       }
     }
     // if game is good word hunting, make api call for keywords then cast members
-    else if (attributes.type == 'goodWordHunting') {
+    else if (attributes.type === 'goodWordHunting') {
       speechText += VOICE_OPEN;
       // if game is extended time, prompt so
-      if (attributes.time == '20s') {
+      if (attributes.time === '20s') {
         speechText +=
           "Okay, you will have 20 seconds for bidding on names. Let's begin. ";
       }
@@ -217,6 +221,7 @@ export const StartGameIntent = {
               )
               .getResponse();
           } catch (error) {
+            console.log(error);
             const replyText = 'Would you like to try again?';
             speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
             repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;
@@ -230,6 +235,7 @@ export const StartGameIntent = {
           }
         }
       } catch (error) {
+        console.log(error);
         const replyText = 'Would you like to try again?';
         speechText = VOICE_OPEN + MOVIEDB_ERROR + replyText + VOICE_CLOSE;
         repromptText = VOICE_OPEN + replyText + VOICE_CLOSE;

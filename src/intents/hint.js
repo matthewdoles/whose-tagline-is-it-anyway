@@ -12,7 +12,7 @@ export const HintIntent = {
     let speechText = '';
 
     // if game is whose tagline, allow for two hints
-    if (attributes.type == 'whoseTagline' || attributes.type == 'answer') {
+    if (attributes.type === 'whoseTagline' || attributes.type === 'answer') {
       // first hint, year the movie came out, release year passed along in sessions variables
       if (attributes.hint == 1) {
         speechText =
@@ -35,7 +35,8 @@ export const HintIntent = {
             movie.cast[1].name +
             "' <break time='1s'/>. With that, I'll give you a few more seconds to think about it." +
             " <break time='4s'/> Okay, that was the last hint I can give you, " +
-            'what would you like to do? Repeat the tagline or answer.</voice>';
+            'what would you like to do? Repeat the tagline or answer.' +
+            VOICE_CLOSE;
         } catch (error) {
           speechText =
             VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
@@ -71,20 +72,21 @@ export const HintIntent = {
     }
 
     // if game is good word hunting, secretly allow for no hints
-    if (attributes.type == 'goodWordHunting') {
-      const attributes = handlerInput.attributesManager.getSessionAttributes();
-      answerPompt =
+    if (attributes.type === 'goodWordHunting') {
+      const answerPompt =
         "<break time='4s'/> Okay, what movie are these keywords and cast members associated with?";
       speechText =
         VOICE_OPEN +
         "Sorry, I can't give you any hints, but I'll give you a " +
         'few more seconds to think of your answer.' +
-        answerPompt;
-      VOICE_CLOSE;
+        answerPompt +
+        VOICE_CLOSE;
 
       // if the user asks for a hint three times, give them the year of the movie
       let easterEgg = 1;
-      easterEgg = easterEgg + attributes.easterEgg;
+      if (attributes.easterEgg) {
+        easterEgg = easterEgg + attributes.easterEgg;
+      }
       if (easterEgg == 3) {
         speechText =
           VOICE_OPEN +

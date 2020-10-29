@@ -1,5 +1,5 @@
 const https = require('https');
-export const fetchData = (options) => {
+const fetchData = (options) => {
   return new Promise(function (resolve, reject) {
     const request = https.request(options, function (response) {
       if (response.statusCode < 200 || response.stausCode >= 300) {
@@ -25,4 +25,8 @@ export const fetchData = (options) => {
     });
     request.end();
   });
+};
+
+module.exports = {
+  fetchData,
 };

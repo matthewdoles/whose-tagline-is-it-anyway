@@ -8,7 +8,7 @@ export const HelpGetTaglineIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
     return (
-      input.request.type === INTENT_REQUEST &&
+      input.type === INTENT_REQUEST &&
       input.intent.name === HELP_GET_TAGLINE_INTENT
     );
   },
@@ -22,7 +22,7 @@ export const HelpGetTaglineIntent = {
           "Or, you can say 'what is the tagline for insert movie'. " +
           'If you are having trouble getting the tagline for the right movie, ' +
           'try appending the year the movie came out after the movie title. ' +
-          "So, you would say 'what is the tagline for insert movie = require( insert year movie came out'. " +
+          "So, you would say 'what is the tagline for insert movie from insert year movie came out'. " +
           'This skill can not be used during a game. ' +
           'If it is, your current round progress will be lost. ' +
           'If you would like to hear this information again, ' +

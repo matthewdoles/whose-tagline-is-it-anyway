@@ -43,10 +43,7 @@ export const GetMovieCastIntent = {
               for (let i = 0; i < credits.cast.length; i++) {
                 if (i + 1 == credits.cast.length) {
                   speechText +=
-                    'and ' +
-                    credits.cast[i].name +
-                    ". <break time='1s'/>" +
-                    VOICE_CLOSE;
+                    'and ' + credits.cast[i].name + ". <break time='1s'/>";
                 } else {
                   speechText += credits.cast[i].name + ", <break time='1s'/>";
                 }
@@ -64,10 +61,7 @@ export const GetMovieCastIntent = {
               for (let i = 0; i < 10; i++) {
                 if (i + 1 == 10) {
                   speechText +=
-                    'and ' +
-                    credits.cast[i].name +
-                    ". <break time='1s'/>" +
-                    VOICE_CLOSE;
+                    'and ' + credits.cast[i].name + ". <break time='1s'/>";
                 } else {
                   speechText += credits.cast[i].name + ", <break time='1s'/>";
                 }
@@ -85,22 +79,20 @@ export const GetMovieCastIntent = {
           'Sorry, I was not able to find a match for ' +
           movieInput +
           '. Try including the year after the title by saying ' +
-          "get the cast for 'insert movie' from 'insert year'. " +
-          VOICE_CLOSE;
+          "get the cast for 'insert movie' from 'insert year'. ";
       }
     } catch (error) {
       speechText =
         VOICE_OPEN + MOVIEDB_ERROR + 'Please try again.' + VOICE_CLOSE;
     }
     let closingText =
-      VOICE_OPEN +
       "If you would like to get the cast for another movie, please say get cast for 'insert movie'." +
       VOICE_CLOSE;
     speechText += closingText;
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(closingText)
+      .reprompt(VOICE_OPEN + closingText)
       .getResponse();
   },
 };

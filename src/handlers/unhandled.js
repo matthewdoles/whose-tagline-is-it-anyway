@@ -5,6 +5,7 @@ export const UnhandledHandler = {
     return true;
   },
   handle(handlerInput, error) {
+    console.log(error);
     return handlerInput.responseBuilder
       .speak(
         VOICE_OPEN + 'Sorry, I am not quite sure what to do.' + VOICE_CLOSE

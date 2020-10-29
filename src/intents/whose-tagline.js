@@ -1,5 +1,5 @@
 const { INTENT_REQUEST, WHOSE_TAGLINE_INTENT } = require('../consts/intents');
-const { StartGameIntent } = require('./start-game');
+import { StartGameIntent } from './start-game';
 
 export const WhoseTaglineIntent = {
   canHandle(handlerInput) {

@@ -1,12 +1,12 @@
 export const INTENT_REQUEST = 'IntentRequest';
 export const ANSWER_INTENT = 'AnswerIntent';
-export const BUY_INTENT = 'Buy';
+export const BUY_INTENT = 'BuyIntent';
 export const CANCEL_INTENT = 'AMAZON.CancelIntent';
 export const FALLBACK_INTENT = 'AMAZON.FallbackIntent';
 export const GAME_RESULTS_INTENT = 'GameResultsIntent';
 export const GET_MOVIE_CAST_INTENT = 'GetMovieCastIntent';
 export const GET_TAGLINE_INTENT = 'GetTaglineIntent';
-export const GOOD_WORD_HUNTING = 'GoodWordHuntingIntent';
+export const GOOD_WORD_HUNTING_INTENT = 'GoodWordHuntingIntent';
 export const HELP_GET_CAST_INTENT = 'HelpGetCastIntent';
 export const HELP_GET_TAGLINE_INTENT = 'HelpGetTaglineIntent';
 export const HELP_GWH_INTENT = 'HelpGoodWordHuntingIntent';

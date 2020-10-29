@@ -5,8 +5,7 @@ export const HelpGWHIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
     return (
-      input.request.type === INTENT_REQUEST &&
-      input.intent.name === HELP_GWH_INTENT
+      input.type === INTENT_REQUEST && input.intent.name === HELP_GWH_INTENT
     );
   },
   handle(handlerInput) {

@@ -2,7 +2,7 @@ const { MOVIEDB_API_KEY, MOVIEDB_HOST, MOVIEDB_LANG } = require('../consts');
 const { fetchData } = require('./https-callout');
 
 const getRandomMovie = async () => {
-  const randomPage = Math.floor(Math.random() * 70) + 1;
+  const randomPage = Math.floor(Math.random() * 80) + 1;
   const path =
     '/3/discover/movie?api_key=' +
     MOVIEDB_API_KEY +

@@ -8,7 +8,7 @@ export const HelpGWHGroupIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
     return (
-      input.request.type === INTENT_REQUEST &&
+      input.type === INTENT_REQUEST &&
       input.intent.name === HELP_GWH_GROUP_INTENT
     );
   },

@@ -14,7 +14,7 @@ export const PurchasedIntent = {
     const ms = handlerInput.serviceClientFactory.getMonetizationServiceClient();
 
     return ms.getInSkillProduct(locale, PRODUCT_ID).then(function (result) {
-      if (result.entitled == 'ENTITLED') {
+      if (result.entitled === 'ENTITLED') {
         // set game type to good word hunting, call start game intent
         let speechText =
           VOICE_OPEN +

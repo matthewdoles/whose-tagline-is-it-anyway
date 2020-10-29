@@ -8,7 +8,7 @@ export const HelpGetCastIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
     return (
-      input.request.type === INTENT_REQUEST &&
+      input.type === INTENT_REQUEST &&
       input.intent.name === HELP_GET_CAST_INTENT
     );
   },

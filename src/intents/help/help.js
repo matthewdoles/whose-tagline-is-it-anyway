@@ -4,9 +4,7 @@ const { HELP_INTENT, INTENT_REQUEST } = require('../../consts/intents');
 export const HelpIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
-    return (
-      input.request.type === INTENT_REQUEST && input.intent.name === HELP_INTENT
-    );
+    return input.type === INTENT_REQUEST && input.intent.name === HELP_INTENT;
   },
   handle(handlerInput) {
     // list help options available

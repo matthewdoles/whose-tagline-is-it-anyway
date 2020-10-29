@@ -1,11 +1,15 @@
-const { GOOD_WORD_HUNTING, INTENT_REQUEST } = require('../consts/intents');
-const { PRODUCT_ID, VOICE_OPEN, VOICE_CLOSE } = require('../consts/');
+const {
+  GOOD_WORD_HUNTING_INTENT,
+  INTENT_REQUEST,
+} = require('../consts/intents');
+const { PRODUCT_ID, VOICE_CLOSE, VOICE_OPEN } = require('../consts');
 
 export const GoodWordHuntingIntent = {
   canHandle(handlerInput) {
     const input = handlerInput.requestEnvelope.request;
     return (
-      input.type === INTENT_REQUEST && input.intent.name === GOOD_WORD_HUNTING
+      input.type === INTENT_REQUEST &&
+      input.intent.name === GOOD_WORD_HUNTING_INTENT
     );
   },
   handle(handlerInput) {
@@ -18,7 +22,7 @@ export const GoodWordHuntingIntent = {
         // set game type to good word hunting, call start game intent
         let responseText =
           VOICE_OPEN +
-          'Would you like to play Good Word Hunting with extended time?</voice>' +
+          'Would you like to play Good Word Hunting with extended time?' +
           VOICE_CLOSE;
         handlerInput.attributesManager.setSessionAttributes({
           type: 'goodWordHuntingStart',

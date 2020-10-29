@@ -28,7 +28,7 @@ export const GetTaglineIntent = {
           const movieTitle = result.original_title;
           const movieYear = result.release_date;
           speechText =
-            VOICE_CLOSE +
+            VOICE_OPEN +
             'The tagline for ' +
             movieTitle +
             ' from ' +
