@@ -1,6 +1,6 @@
 # whose-tagline-is-it-anyway
 
-[![Build Status](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway.svg?branch=master)](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway)
+[![Build Status](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway.svg?branch=master)](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway) [![Coverage Status](https://coveralls.io/repos/github/matthewdoles/whose-tagline-is-it-anyway/badge.svg)](https://coveralls.io/github/matthewdoles/whose-tagline-is-it-anyway)
 
 <img src="https://images-na.ssl-images-amazon.com/images/I/61rJ1AiwT+L.png" alt="SkillLogo" width="250"/>
 
@@ -10,7 +10,9 @@ Invocation: whose tagline is it anyway
 
 ### Skill Description
 
-In Whose Tagline Is It Anyway, you will be given the tagline for a random movie from a pool of 1,500 semi-popular movies. From that, you must deduce what movie the tagline is for. There is also an additional in-skill product: Good Word Hunting. In this game, you will be given up to 5 keywords associated with a random movie. With those keywords, you will then be asked how many cast members from lowest billed to highest would you need to guess what the movie is.
+In Whose Tagline Is It Anyway, you will be given the tagline for a random movie from a pool of aroundd 1,500 semi-popular movies. With that, you must simply deduce what movie the tagline is for.
+
+Additionally, there is also a in-skill product availabe for purchase: Good Word Hunting. In this game, you will be given up to 5 keywords associated with a random movie. With those keywords, you will then be asked how many of the top 10 cast members, from lowest billed to highest, you would need to then guess what the movie is.
 
 ### Design
 
@@ -20,7 +22,11 @@ The pool of 1,500 or so movies are retrieved using [The Movie Database](https://
 
 #### Deployment
 
-There is a Github Action to deploy the code to a Lambda function. The runtime environment of the Lambda function is currently Node.js 12.x. This particular version (and all currently available versions) struggles with understanding more advanced ECMAScript flavors of JavaScript - thus, Babel was introduced to convert the code to ES5 before zipping and deploying it.
+There is a Github Action to deploy the code to a Lambda function. The runtime environment of the Lambda function is currently Node.js 12.x. This particular version (and all currently available versions) struggles with more advanced ECMAScript flavors of JavaScript like ES6 - thus, Babel was introduced to convert the code to ES5 before zipping it up and deploying it.
+
+#### Testing
+
+Unit tests were written using the [Alexa Skill Test Framework](https://www.npmjs.com/package/alexa-skill-test-framework). Given the in-skill product, it is hard to achieve 100% code coverage since the transaction itself is securely completed on Amazon's end. Though purchasing and refunding the product was tested using the [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask). On top of that, as a skill with a purchasable product - all scenarios were tested by the Amazon Alexa team when submitted for publication.
 
 #### Launch Request Handler
 

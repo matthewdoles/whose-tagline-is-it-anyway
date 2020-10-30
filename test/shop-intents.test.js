@@ -3,6 +3,7 @@ const {
   FALLBACK_INTENT,
   SHOP_INTENT,
   REFUND_INTENT,
+  BUY_INTENT,
 } = require('../build/consts/intents');
 
 // initialize the testing framework
@@ -20,6 +21,26 @@ describe('ShopIntents', function () {
         saysNothing: false,
         repromptsNothing: false,
         shouldEndSession: false,
+      },
+    ]);
+  });
+  describe(BUY_INTENT, function () {
+    alexaTest.test([
+      {
+        request: alexaTest.getIntentRequest(BUY_INTENT),
+        saysNothing: true,
+        repromptsNothing: true,
+        shouldEndSession: true,
+      },
+    ]);
+  });
+  describe(REFUND_INTENT, function () {
+    alexaTest.test([
+      {
+        request: alexaTest.getIntentRequest(REFUND_INTENT),
+        saysNothing: true,
+        repromptsNothing: true,
+        shouldEndSession: true,
       },
     ]);
   });

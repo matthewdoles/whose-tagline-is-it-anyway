@@ -20,7 +20,7 @@ export const HelpGWHGroupIntent = {
           'Good Word Hunting can also be fun to play in a group setting. ' +
           'At the start of the game, everyone will be given the keywords associated ' +
           'with a random movie. Then, you will be given 20 seconds to bid on who can ' +
-          'name the movie with the least amount of names given to them, = require( lowest ' +
+          'name the movie with the least amount of names given to them, from lowest ' +
           'billed to highest. With a successful bidder determined, that person will ' +
           'complete the game. If the bidder gets the answer right, add a point. ' +
           'If they get it wrong, deduct a point. Or, instead of subtracting a point, ' +
