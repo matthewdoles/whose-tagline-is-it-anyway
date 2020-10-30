@@ -3,6 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 var MOVIEDB_API_KEY = exports.MOVIEDB_API_KEY = process.env.MOVIE_DB_API_KEY;
 var MOVIEDB_HOST = exports.MOVIEDB_HOST = 'api.themoviedb.org';
 var MOVIEDB_LANG = exports.MOVIEDB_LANG = 'en-US';

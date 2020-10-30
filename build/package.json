@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "build": "babel --presets es2015 src --out-dir build"
+    "local-test": "nyc mocha",
+    "build": "babel --presets es2015 src --out-dir build",
+    "cover": "istanbul cover _mocha",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "author": "Matthew Doles",
   "license": "MIT",
@@ -15,6 +18,11 @@
   },
   "devDependencies": {
     "alexa-skill-test-framework": "^1.2.4",
+    "coveralls": "^3.1.0",
+    "dotenv": "^8.2.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^8.2.0",
+    "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^15.1.0"
   }
 }
