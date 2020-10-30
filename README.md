@@ -1,7 +1,5 @@
 # whose-tagline-is-it-anyway
 
-[![Build Status](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway.svg?branch=master)](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway) [![Coverage Status](https://coveralls.io/repos/github/matthewdoles/whose-tagline-is-it-anyway/badge.svg)](https://coveralls.io/github/matthewdoles/whose-tagline-is-it-anyway)
-
 <img src="https://images-na.ssl-images-amazon.com/images/I/61rJ1AiwT+L.png" alt="SkillLogo" width="250"/>
 
 Alexa Skill Store Page: [Whose Tagline Is It Anyway](https://www.amazon.com/Whose-Tagline-Is-It-Anyway/dp/B07SW6MZLZ)
@@ -22,9 +20,13 @@ The pool of 1,500 or so movies are retrieved using [The Movie Database](https://
 
 #### Deployment
 
+[![Build Status](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway.svg?branch=master)](https://travis-ci.com/matthewdoles/whose-tagline-is-it-anyway)
+
 There is a Github Action to deploy the code to a Lambda function. The runtime environment of the Lambda function is currently Node.js 12.x. This particular version (and all currently available versions) struggles with more advanced ECMAScript flavors of JavaScript like ES6 - thus, Babel was introduced to convert the code to ES5 before zipping it up and deploying it.
 
 #### Testing
+
+ [![Coverage Status](https://coveralls.io/repos/github/matthewdoles/whose-tagline-is-it-anyway/badge.svg)](https://coveralls.io/github/matthewdoles/whose-tagline-is-it-anyway)
 
 Unit tests were written using the [Alexa Skill Test Framework](https://www.npmjs.com/package/alexa-skill-test-framework). Given the in-skill product, it is hard to achieve 100% code coverage since the transaction itself is securely completed on Amazon's end. Though purchasing and refunding the product was tested using the [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask). On top of that, as a skill with a purchasable product - all scenarios were tested by the Amazon Alexa team when submitted for publication.
 
